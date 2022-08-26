@@ -3,13 +3,38 @@
 
 The cryptopals challenges (https://cryptopals.com/) are a set of practical cryptography exercises that simulate real-world crypto attacks. They're derived from weaknesses in real-world systems and modern cryptographic constructions.
 
-### What's The Purpose Of This Repo
+### What's The Purpose Of This Project
 
 The following is my walkthrough of these challenges using the Python 3, although only the solution is provided without an explanation (might be added later on), since it should be understandable from the code itself and inserted comments in it.
 
-### Status Of The Repo
+### Status Of This Project
 
 This is still a work in progress. Since I am not solving the challenges or a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
+
+## How To Run
+
+Python virtual environment is recommended for running these challenges, with a small guide on how to set it up here:
+
+```shell
+# Install virtualenv If Not Already Installed
+$ pip3 install virtualenv
+
+# Create The Virtual Environment
+$ python3 -m virtualenv -p python3 venv
+
+# Activate The Virtual Environment
+source venv/bin/activate
+
+# Deactivate The Environment After Being Done With The Challenges
+deactivate
+```
+
+## To Do
+
+Things to add/remove/modify:
+* Add Pytest for testing the solutions with available results
+* Create a list of requirements.txt file
+* Add better explanation of the current solutions for different challenges
 
 ## Table Of Contents
 * Set 1: Basics
