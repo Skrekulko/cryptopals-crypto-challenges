@@ -153,3 +153,13 @@ def test_s02_c05() -> None:
 
     assert hijack_user_role() == result
     
+#
+#   14 - Byte-at-a-time ECB decryption (Harder)
+#
+
+from solutions import crack_oracle_prefix
+@pytest.mark.skip(reason = "Takes too long to complete.")
+def test_s02_c06() -> None:
+    result = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3"
+    
+    assert crack_oracle_prefix() == result

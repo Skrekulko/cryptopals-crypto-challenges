@@ -237,7 +237,7 @@ def decrypt_aes_cbc(input: bytes, key: bytes, iv: bytes) -> bytes:
 #
 
 def generate_key_128b() -> bytes:
-    return bytes(randint(0 , 15) for i in range(16))
+    return urandom(16)
 
 def encrypt_aes_ecb(input: bytes, key: bytes) -> bytes:
     padded_input = pkcs7_padding(input, 16)
@@ -295,8 +295,8 @@ def byte_at_a_time_ecb_decryption(input: bytes) -> bytes:
     block_size = 0
     unknown_input_len = 0
     for i in count(start = 0):
-        encrypted1 = encrypt_oracle_ecb(b"A" * i, unknown_input, key)
-        encrypted2 = encrypt_oracle_ecb(b"A" * (i + 1), unknown_input, key)
+        encrypted1 = encrypt_oracle_ecb(unknown_input, b"A" * i, key)
+        encrypted2 = encrypt_oracle_ecb(unknown_input, b"A" * (i + 1), key)
         encrypted1_len = len(encrypted1)
         encrypted2_len = len(encrypted2)
         
@@ -306,7 +306,7 @@ def byte_at_a_time_ecb_decryption(input: bytes) -> bytes:
             break
     
     # Detect Encryption Mode
-    detected_mode = detect_aes_ecb_or_cbc(encrypt_oracle_ecb(b"A" * block_size * 2, unknown_input, key))
+    detected_mode = detect_aes_ecb_or_cbc(encrypt_oracle_ecb(unknown_input, b"A" * block_size * 2, key))
     
     # Extract The Unknown Input
     decrypted = b""
@@ -319,12 +319,12 @@ def byte_at_a_time_ecb_decryption(input: bytes) -> bytes:
         # Calculate And Get The Target Block
         target_block_number = decrypted_len // block_size
         target_slice = slice(target_block_number * block_size, (target_block_number + 1) * block_size)
-        target_block = encrypt_oracle_ecb(padding, unknown_input, key)[target_slice]
+        target_block = encrypt_oracle_ecb(unknown_input, padding, key)[target_slice]
         
         # Brute-Force All Possible Combinations For A Single Byte
         for byte in range(256):
             crafted_input = padding + decrypted + byte.to_bytes(1, "big")
-            crafted_block = encrypt_oracle_ecb(crafted_input, unknown_input, key)[target_slice]
+            crafted_block = encrypt_oracle_ecb(unknown_input, crafted_input, key)[target_slice]
             
             # Match Found
             if crafted_block == target_block:
@@ -399,6 +399,85 @@ def hijack_user_role() -> bytes:
             break
 
     return decrypted
+
+#
+#   14 - Byte-at-a-time ECB decryption (Harder)
+#
+
+def generate_random_bytes(length = 16):
+    return urandom(randint(1, length))
+
+class Oracle:
+    def __init__(self):
+        self.key = generate_key_128b()
+        self.prefix = generate_random_bytes()
+        self.target = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A"
+
+    def encrypt(self, input = b"") -> bytes:
+        return encrypt_aes_ecb(self.prefix + input + self.target, self.key)
+        
+    def decrypt(self, input) -> bytes:
+        return decrypt_aes_ecb(input, self.key)
+
+def crack_oracle_prefix() -> bytes:
+    oracle = Oracle()
+    
+    # Detect Block Size
+    block_size = 0
+    no_input_length = len(oracle.encrypt())
+    for i in count(start = 0):
+        length = len(oracle.encrypt(b"A" * i))
+        
+        if length != no_input_length:
+            block_size = length - no_input_length
+            required_padding_len = i
+            break
+    
+    # Detect Encryption Mode
+    detection_padding = b"A" * block_size * 5 + b"A" * (required_padding_len + 1)
+    detected_mode = detect_aes_ecb_or_cbc(oracle.encrypt(detection_padding))
+    
+    # Calculate Prefix Size
+    prefix_size = 0
+    previous_blocks = []
+    for i in range(1, block_size + 1):
+        cipher = oracle.encrypt(b"A" * i)
+        current_blocks = list(cipher[i * block_size : i * block_size + block_size] for i in range(len(cipher) // block_size))
+        
+        if previous_blocks and current_blocks[0] == previous_blocks[0]:
+            prefix_size = block_size - i + 1
+            break
+            
+        previous_blocks = current_blocks
+    
+    # Calculate Target Length
+    target_length = no_input_length - required_padding_len - prefix_size
+    
+    # Extract The Unknown Input
+    decrypted = b""
+    for _ in range(target_length):
+        # Craft The Needed Padding
+        decrypted_len = len(decrypted)
+        padding_len = (- decrypted_len - 1 - prefix_size) % block_size
+        padding = b"A" * padding_len
+        
+        # Calculate And Get The Target Block
+        target_block_number = (decrypted_len + prefix_size) // block_size
+        target_slice = slice(target_block_number * block_size, (target_block_number + 1) * block_size)
+        target_block = oracle.encrypt(padding)[target_slice]
+        
+        # Brute-Force All Possible Combinations For A Single Byte
+        for byte in range(256):
+            crafted_input = padding + decrypted + byte.to_bytes(1, "big")
+            crafted_block = oracle.encrypt(crafted_input)[target_slice]
+            
+            # Match Found
+            if crafted_block == target_block:
+                decrypted += byte.to_bytes(1, "little")
+                break
+                
+    return decrypted
+
 
 def main():
     print("The Crytopals Crypto Challenges")
