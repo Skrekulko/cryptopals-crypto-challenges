@@ -5,7 +5,7 @@ The cryptopals challenges (https://cryptopals.com/) are a set of practical crypt
 
 ### What's The Purpose Of This Project
 
-The following is my walkthrough of these challenges using the Python 3, although only the solution is provided without an explanation (might be added later on), since it should be understandable from the code itself and inserted comments in it.
+The following is my walkthrough of these challenges using the Python 3.10, although only the solution is provided without a detailed explanation (might be added later on), since it should be understandable from the code itself and inserted comments in it.
 
 ### Status Of This Project
 
@@ -118,3 +118,6 @@ Things to add/remove/modify:
   8. Key-Recovery Attacks on GCM with a Truncated MAC :x:
   9. Truncated-MAC GCM Revisited: Improving the Key-Recovery Attack via Ciphertext Length Extension :x:
   10. Exploiting Implementation Errors in Diffie-Hellman :x:
+
+## License
+Everything in this repository is released under the terms of the MIT License. For more information, please see the file "LICENSE".
