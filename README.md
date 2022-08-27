@@ -29,13 +29,6 @@ source venv/bin/activate
 deactivate
 ```
 
-## To Do
-
-Things to add/remove/modify:
-* Add Pytest for testing the solutions with available results
-* Create a list of requirements.txt file
-* Add better explanation of the current solutions for different challenges
-
 ## Table Of Contents
 * Set 1: Basics
   1. Convert hex to base64 :heavy_check_mark:
