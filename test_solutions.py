@@ -162,3 +162,22 @@ def test_s02_c06() -> None:
     result = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
     
     assert crack_oracle_prefix() == result
+
+#
+#   15 - PKCS#7 padding validation
+#
+
+from solutions import PKCS7
+def test_s02_c06() -> None:
+    input = b"ICE ICE BABY\x04\x04\x04\x04"
+    input_incorrect_1 = b"ICE ICE BABY\x05\x05\x05\x05"
+    input_incorrect_2 = b"ICE ICE BABY\x01\x02\x03\x04"
+    result = b"ICE ICE BABY"
+    
+    with pytest.raises(ValueError):
+        PKCS7.strip(input_incorrect_1)
+        
+    with pytest.raises(ValueError):
+        PKCS7.strip(input_incorrect_2)
+    
+    assert PKCS7.strip(input) == result
