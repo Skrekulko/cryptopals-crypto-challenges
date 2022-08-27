@@ -47,7 +47,7 @@ deactivate
   4. Byte-at-a-time ECB decryption (Simple) :heavy_check_mark:
   5. ECB cut-and-paste :heavy_check_mark:
   6. Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:
-  7. PKCS#7 padding validation :x:
+  7. PKCS#7 padding validation :heavy_check_mark:
   8. CBC bitflipping attacks :x:
 
 * Set 3: Block & stream crypto
