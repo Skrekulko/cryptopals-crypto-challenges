@@ -284,33 +284,30 @@ def detect_aes_ecb_or_cbc(cipher: bytes) -> tuple[str, bytes]:
 #   12 - Byte-at-a-time ECB decryption (Simple)
 #
 
-def encrypt_oracle_ecb(unknown_input: bytes, to_append: bytes, key: bytes) -> bytes:
-    return encrypt_aes_ecb(unknown_input + to_append, key)
-
-def byte_at_a_time_ecb_decryption(input: bytes) -> bytes:
-    unknown_input = codecs.decode(input, "base64")
-    key = generate_key_128b()
+def crack_oracle_no_prefix() -> bytes:
+    oracle = Oracle()
     
     # Detect Block Size
     block_size = 0
-    unknown_input_len = 0
+    target_length = 0
+    required_padding_len = 0
     for i in count(start = 0):
-        encrypted1 = encrypt_oracle_ecb(unknown_input, b"A" * i, key)
-        encrypted2 = encrypt_oracle_ecb(unknown_input, b"A" * (i + 1), key)
-        encrypted1_len = len(encrypted1)
-        encrypted2_len = len(encrypted2)
+        encrypted1_len = len(oracle.encrypt_no_prefix(b"A" * i))
+        encrypted2_len = len(oracle.encrypt_no_prefix(b"A" * (i + 1)))
         
         if encrypted2_len > encrypted1_len:
             block_size = encrypted2_len - encrypted1_len
-            unknown_input_len = encrypted1_len - i
+            target_length = encrypted1_len - i
+            required_padding_len = i
             break
     
     # Detect Encryption Mode
-    detected_mode = detect_aes_ecb_or_cbc(encrypt_oracle_ecb(unknown_input, b"A" * block_size * 2, key))
+    detection_padding = b"A" * block_size * 2 + b"A" * (required_padding_len + 1)
+    detected_mode = detect_aes_ecb_or_cbc(oracle.encrypt_no_prefix(detection_padding))
     
     # Extract The Unknown Input
     decrypted = b""
-    for _ in range(unknown_input_len):
+    for _ in range(target_length):
         # Craft The Needed Padding
         decrypted_len = len(decrypted)
         padding_len = (- decrypted_len - 1) % block_size
@@ -319,12 +316,12 @@ def byte_at_a_time_ecb_decryption(input: bytes) -> bytes:
         # Calculate And Get The Target Block
         target_block_number = decrypted_len // block_size
         target_slice = slice(target_block_number * block_size, (target_block_number + 1) * block_size)
-        target_block = encrypt_oracle_ecb(unknown_input, padding, key)[target_slice]
+        target_block = oracle.encrypt_no_prefix(padding)[target_slice]
         
         # Brute-Force All Possible Combinations For A Single Byte
         for byte in range(256):
             crafted_input = padding + decrypted + byte.to_bytes(1, "big")
-            crafted_block = encrypt_oracle_ecb(unknown_input, crafted_input, key)[target_slice]
+            crafted_block = oracle.encrypt_no_prefix(crafted_input)[target_slice]
             
             # Match Found
             if crafted_block == target_block:
@@ -411,9 +408,12 @@ class Oracle:
     def __init__(self):
         self.key = generate_key_128b()
         self.prefix = generate_random_bytes()
-        self.target = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A"
+        self.target = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
 
-    def encrypt(self, input = b"") -> bytes:
+    def encrypt_no_prefix(self, input = b"") -> bytes:
+        return encrypt_aes_ecb(input + self.target, self.key)
+
+    def encrypt_prefix(self, input = b"") -> bytes:
         return encrypt_aes_ecb(self.prefix + input + self.target, self.key)
         
     def decrypt(self, input) -> bytes:
@@ -424,24 +424,24 @@ def crack_oracle_prefix() -> bytes:
     
     # Detect Block Size
     block_size = 0
-    no_input_length = len(oracle.encrypt())
+    no_input_length = len(oracle.encrypt_prefix())
     for i in count(start = 0):
-        length = len(oracle.encrypt(b"A" * i))
+        length = len(oracle.encrypt_prefix(b"A" * i))
         
         if length != no_input_length:
             block_size = length - no_input_length
-            required_padding_len = i
+            required_padding_len = i - 1
             break
     
     # Detect Encryption Mode
-    detection_padding = b"A" * block_size * 5 + b"A" * (required_padding_len + 1)
-    detected_mode = detect_aes_ecb_or_cbc(oracle.encrypt(detection_padding))
+    detection_padding = b"A" * block_size * 2 + b"A" * (required_padding_len + 1)
+    detected_mode = detect_aes_ecb_or_cbc(oracle.encrypt_prefix(detection_padding))
     
     # Calculate Prefix Size
     prefix_size = 0
     previous_blocks = []
-    for i in range(1, block_size + 1):
-        cipher = oracle.encrypt(b"A" * i)
+    for i in range(0, block_size):
+        cipher = oracle.encrypt_prefix(b"A" * i)
         current_blocks = list(cipher[i * block_size : i * block_size + block_size] for i in range(len(cipher) // block_size))
         
         if previous_blocks and current_blocks[0] == previous_blocks[0]:
@@ -464,18 +464,18 @@ def crack_oracle_prefix() -> bytes:
         # Calculate And Get The Target Block
         target_block_number = (decrypted_len + prefix_size) // block_size
         target_slice = slice(target_block_number * block_size, (target_block_number + 1) * block_size)
-        target_block = oracle.encrypt(padding)[target_slice]
+        target_block = oracle.encrypt_prefix(padding)[target_slice]
         
         # Brute-Force All Possible Combinations For A Single Byte
         for byte in range(256):
             crafted_input = padding + decrypted + byte.to_bytes(1, "big")
-            crafted_block = oracle.encrypt(crafted_input)[target_slice]
+            crafted_block = oracle.encrypt_prefix(crafted_input)[target_slice]
             
             # Match Found
             if crafted_block == target_block:
                 decrypted += byte.to_bytes(1, "little")
                 break
-                
+    
     return decrypted
 
 

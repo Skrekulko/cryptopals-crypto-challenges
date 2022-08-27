@@ -135,13 +135,12 @@ def test_s02_c03() -> None:
 #   12 - Byte-at-a-time ECB decryption (Simple)
 #
 
-from solutions import byte_at_a_time_ecb_decryption
+from solutions import crack_oracle_no_prefix
 @pytest.mark.skip(reason = "Takes too long to complete.")
 def test_s02_c04() -> None:
-    input = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
-    result = b"Rollin' in my 5.0\nWith my rag-top down so my hair can blow\nThe girlies on standby waving just to say hi\nDid you stop? No, I just drove by\n"
+    result = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
     
-    assert byte_at_a_time_ecb_decryption(input) == result
+    assert crack_oracle_no_prefix() == result
     
 #
 #   13 - ECB cut-and-paste
@@ -160,6 +159,6 @@ def test_s02_c05() -> None:
 from solutions import crack_oracle_prefix
 @pytest.mark.skip(reason = "Takes too long to complete.")
 def test_s02_c06() -> None:
-    result = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3"
+    result = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
     
     assert crack_oracle_prefix() == result
