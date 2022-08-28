@@ -11,6 +11,35 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
+## Solutions
+
+### Naming Format
+
+To make it easier to distinguish the solutions and tests for each solution, a common name format was implemented. The name format for the solutions is:
+
+>s**XX**\_c**YY**
+
+where **XX** represents the number of the set, while **YY** represents the number of the challenge.
+
+### Where To Put Your Solution
+
+The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for challenge _Convert hex to base64_ must be inside of the **s01_c01()** function. Outside of the corresponding function, any code can be written as long as it returns the result (solution) for further testing.
+
+```python
+#
+#   01 - Convert hex to base64
+#
+
+def helper_function(input):
+    ...
+
+def s01_c01(input):
+    ...
+
+    return solution
+
+```
+
 ## How To Run
 
 ### Virtual Environment
@@ -35,6 +64,48 @@ source venv/bin/activate
 ```shell
 # Deactivate The Virtual Environment After Being Done With The Challenges
 deactivate
+```
+
+### Tests
+
+For testing, the *pytest* framework is used to compare written solutions to existing solutions of solved challenges. Aside from *pytest*, *pytest-timeout* is used to abort tests when the specified amount of time is exceeded. The timeout is set to 60 seconds by default, which may be increased in the future as the number of solved challenges increases. This timeout can be configured in the *pyproject.toml* file as follows:
+
+```
+[tool.pytest.ini_options]
+timeout = 60
+```
+
+#### Naming Format
+
+The tests have the same naming format as the solutions, with the addition of 'test_' prefix to indicate that they are tests:
+
+>test\_s**XX**\_c**YY**
+
+#### Test Structure
+
+todo:
+
+```python
+#
+#   01 - Convert hex to base64
+#
+
+from solutions import s01_c01
+def test_s01_c01() -> None:
+    input = b"0123456789abcdef"
+    result = b"ASNFZ4mrze8="
+    
+    assert s01_c01(input) == result
+```
+
+#### Running Tests
+
+To run the tests for the solutions, run the pytest command with the verbosity flag:
+
+```bash
+$ pytest -v
+
+test_solutions.py::test_s01_c01 PASSED                                                                              [100%]
 ```
 
 ## Table Of Contents
