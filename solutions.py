@@ -14,6 +14,9 @@ from itertools import count
 def convert_hex_to_base64(input: bytes) -> bytes:
     return codecs.encode(codecs.decode(input, "hex"), "base64").rstrip()
 
+def s01_c01(input):
+    return convert_hex_to_base64(input)
+
 #
 #   02 - Fixed XOR
 #
@@ -24,6 +27,8 @@ def fixed_xor(input1: bytes, input2: bytes) -> bytes:
     else:
         raise ValueError
 
+def s01_c02(input1, input2):
+    return fixed_xor(input1, input2)
 #
 #   03 - Single-byte XOR cipher
 #
@@ -68,7 +73,10 @@ def single_byte_xor_decipher(input: bytes) -> tuple[bytes, int, float]:
             encryption_key, original_text, min_fq = k, _input, _freq
 
     return original_text, encryption_key, min_fq
-    
+
+def s01_c03(input):
+    return single_byte_xor_decipher(input)
+
 #
 #   04 - Detect single-character XOR
 #
@@ -82,6 +90,10 @@ def detect_single_character_xor(ciphers: list) -> tuple[bytes, int, float]:
     
     return min(deciphered, key = lambda t: t[2])
 
+def s01_c04(input):
+    return detect_single_character_xor(load_ciphers(input))
+
+
 #
 #   05 - Implement repeating-key XOR
 #
@@ -91,6 +103,9 @@ def repeating_key_xor(input: bytes, key: bytes) -> bytes:
     key = (key * repetitions)[:len(input)]
     
     return fixed_xor(input, key)
+
+def s01_c05(input1, input2):
+    return repeating_key_xor(input1, input2)
 
 #
 #   06 - Break repeating-key XOR
@@ -160,6 +175,9 @@ def decipher_repeating_xor(data: bytes) -> tuple[bytes, bytes]:
     
     return xored, key
 
+def s01_c06(input):
+    return decipher_repeating_xor(load_data(input))
+
 #
 #   07 - AES in ECB mode
 #
@@ -173,6 +191,9 @@ def decrypt_aes_ecb(input: bytes, key: bytes) -> bytes:
         decrypted += cipher_block.decrypt(block)
 
     return pkcs7_unpadding(decrypted)
+
+def s01_c07(input1, input2):
+    return decrypt_aes_ecb(load_data(input1), input2)
     
 #
 #   08 - Detect AES in ECB mode
@@ -186,6 +207,9 @@ def detect_repeated_blocks(input: bytes, block_size: int) -> bool:
         return True
     else:
         return False
+
+def s01_c08(input):
+    return detect_repeated_blocks(load_data(input), 16)
         
 #
 #   09 - Implement PKCS#7 padding
@@ -211,6 +235,9 @@ def pkcs7_unpadding(input: bytes) -> bytes:
     else:
         return input
 
+def s02_c01(input1, input2):
+    return pkcs7_padding(input1, input2)
+
 #
 #   10 - Implement CBC mode
 #
@@ -231,6 +258,9 @@ def decrypt_aes_cbc(input: bytes, key: bytes, iv: bytes) -> bytes:
        decrypted += fixed_xor(decrypt_aes_ecb_block(in_blocks[i], key), in_blocks[i - 1])
         
     return pkcs7_unpadding(decrypted)
+
+def s02_c02(input1, input2, input3):
+    return decrypt_aes_cbc(load_data(input1), input2, input3)
 
 #
 #   11 - An ECB/CBC detection oracle
@@ -279,6 +309,10 @@ def detect_aes_ecb_or_cbc(cipher: bytes) -> tuple[str, bytes]:
     chunks = Counter((cipher[i * 16 : i * 16 + 16]) for i in range(n_blocks))
     
     return ("ecb", max(chunks)) if len(chunks) != n_blocks else ("cbc", list(chunks.elements())[0])
+
+def s02_c03(input):
+    oracle = encrypt_oracle(input)
+    return (detect_aes_ecb_or_cbc(oracle[1])[0], oracle[0])
 
 #
 #   12 - Byte-at-a-time ECB decryption (Simple)
@@ -329,6 +363,9 @@ def crack_oracle_no_prefix() -> bytes:
                 break
                 
     return decrypted
+
+def s02_c04():
+    return crack_oracle_no_prefix()
 
 #
 #   13 - ECB cut-and-paste
@@ -397,10 +434,12 @@ def hijack_user_role() -> bytes:
 
     return decrypted
 
+def s02_c05():
+    return hijack_user_role()
+
 #
 #   14 - Byte-at-a-time ECB decryption (Harder)
 #
-
 def generate_random_bytes(length = 16):
     return urandom(randint(1, length))
 
@@ -478,6 +517,9 @@ def crack_oracle_prefix() -> bytes:
     
     return decrypted
 
+def s02_c06():
+    return crack_oracle_prefix()
+
 #
 #   15 - PKCS#7 padding validation
 #
@@ -500,7 +542,10 @@ class PKCS7:
             raise ValueError("Incorrect padding.")
         
         return input[:-last_byte]
-        
+
+def s02_c07(input):
+    return PKCS7.strip(input)
+
 def main():
     print("The Crytopals Crypto Challenges")
 
