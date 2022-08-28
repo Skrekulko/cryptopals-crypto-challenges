@@ -266,9 +266,6 @@ def s02_c02(file_name, key, iv):
 #   11 - An ECB/CBC detection oracle
 #
 
-def generate_key_128b() -> bytes:
-    return urandom(16)
-
 def encrypt_aes_ecb(input: bytes, key: bytes) -> bytes:
     padded_input = pkcs7_padding(input, 16)
     n_blocks = int(len(padded_input) / 16)
@@ -293,15 +290,15 @@ def encrypt_aes_cbc(input: bytes, key: bytes, iv: bytes) -> bytes:
     return encrypted
 
 def encrypt_oracle(input: bytes) -> bytes:
-    key = generate_key_128b()
-    header = urandom(randint(5, 10))
-    footer = urandom(randint(5, 10))
+    key = Generator.generate_key_128b()
+    header = Generator.generate_random_bytes(5, 10)
+    footer = Generator.generate_random_bytes(5, 10)
     full_input = header + input + footer
     
     if randint(0, 1):
         return ("ecb", encrypt_aes_ecb(full_input, key))
     else:
-        return ("cbc", encrypt_aes_cbc(full_input, key, generate_key_128b()))
+        return ("cbc", encrypt_aes_cbc(full_input, key, Generator.generate_key_128b()))
         
 def detect_aes_ecb_or_cbc(cipher: bytes) -> tuple[str, bytes]:
     cipher_len = len(cipher)
@@ -373,7 +370,7 @@ def s02_c04():
 
 class Profile:
     def __init__(self):
-        self.key = generate_key_128b()
+        self.key = Generator.generate_key_128b()
         
     @staticmethod
     def profile_for(email: bytes) -> bytes:
@@ -440,13 +437,20 @@ def s02_c05():
 #
 #   14 - Byte-at-a-time ECB decryption (Harder)
 #
-def generate_random_bytes(length = 16):
-    return urandom(randint(1, length))
+
+class Generator:
+    @staticmethod
+    def generate_random_bytes(min = 1, max = 16) -> bytes:
+        return urandom(randint(min, max))
+        
+    @staticmethod
+    def generate_key_128b() -> bytes:
+        return urandom(16)
 
 class Oracle:
     def __init__(self):
-        self.key = generate_key_128b()
-        self.prefix = generate_random_bytes()
+        self.key = Generator.generate_key_128b()
+        self.prefix = Generator.generate_random_bytes()
         self.target = b"Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK"
 
     def encrypt_no_prefix(self, input = b"") -> bytes:
