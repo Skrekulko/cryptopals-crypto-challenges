@@ -90,8 +90,8 @@ def detect_single_character_xor(ciphers: list) -> tuple[bytes, int, float]:
     
     return min(deciphered, key = lambda t: t[2])
 
-def s01_c04(input):
-    return detect_single_character_xor(load_ciphers(input))
+def s01_c04(file_name):
+    return detect_single_character_xor(load_ciphers(file_name))
 
 
 #
@@ -104,8 +104,8 @@ def repeating_key_xor(input: bytes, key: bytes) -> bytes:
     
     return fixed_xor(input, key)
 
-def s01_c05(input1, input2):
-    return repeating_key_xor(input1, input2)
+def s01_c05(input, key):
+    return repeating_key_xor(input, key)
 
 #
 #   06 - Break repeating-key XOR
@@ -175,8 +175,8 @@ def decipher_repeating_xor(data: bytes) -> tuple[bytes, bytes]:
     
     return xored, key
 
-def s01_c06(input):
-    return decipher_repeating_xor(load_data(input))
+def s01_c06(file_name):
+    return decipher_repeating_xor(load_data(file_name))
 
 #
 #   07 - AES in ECB mode
@@ -192,8 +192,8 @@ def decrypt_aes_ecb(input: bytes, key: bytes) -> bytes:
 
     return pkcs7_unpadding(decrypted)
 
-def s01_c07(input1, input2):
-    return decrypt_aes_ecb(load_data(input1), input2)
+def s01_c07(file_name, key):
+    return decrypt_aes_ecb(load_data(file_name), key)
     
 #
 #   08 - Detect AES in ECB mode
@@ -208,8 +208,8 @@ def detect_repeated_blocks(input: bytes, block_size: int) -> bool:
     else:
         return False
 
-def s01_c08(input):
-    return detect_repeated_blocks(load_data(input), 16)
+def s01_c08(file_name):
+    return detect_repeated_blocks(load_data(file_name), 16)
         
 #
 #   09 - Implement PKCS#7 padding
@@ -235,8 +235,8 @@ def pkcs7_unpadding(input: bytes) -> bytes:
     else:
         return input
 
-def s02_c01(input1, input2):
-    return pkcs7_padding(input1, input2)
+def s02_c01(input, block_size):
+    return pkcs7_padding(input, block_size)
 
 #
 #   10 - Implement CBC mode
@@ -259,8 +259,8 @@ def decrypt_aes_cbc(input: bytes, key: bytes, iv: bytes) -> bytes:
         
     return pkcs7_unpadding(decrypted)
 
-def s02_c02(input1, input2, input3):
-    return decrypt_aes_cbc(load_data(input1), input2, input3)
+def s02_c02(file_name, key, iv):
+    return decrypt_aes_cbc(load_data(file_name), key, iv)
 
 #
 #   11 - An ECB/CBC detection oracle
