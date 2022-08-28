@@ -9,11 +9,15 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 ### Status Of This Project
 
-This is still a work in progress. Since I am not solving the challenges or a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
+This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
 ## How To Run
 
+### Virtual Environment
+
 Python virtual environment is recommended for running these challenges, with a small guide on how to set it up here:
+
+#### Installation And Activation
 
 ```shell
 # Install virtualenv If Not Already Installed
@@ -24,8 +28,12 @@ $ python3 -m virtualenv -p python3 venv
 
 # Activate The Virtual Environment
 source venv/bin/activate
+```
 
-# Deactivate The Environment After Being Done With The Challenges
+#### Deactivation
+
+```shell
+# Deactivate The Virtual Environment After Being Done With The Challenges
 deactivate
 ```
 
