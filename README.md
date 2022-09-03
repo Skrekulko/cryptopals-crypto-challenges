@@ -68,44 +68,24 @@ deactivate
 
 ### Tests
 
-For testing, the *pytest* framework is used to compare written solutions to existing solutions of solved challenges. Aside from *pytest*, *pytest-timeout* is used to abort tests when the specified amount of time is exceeded. The timeout is set to 60 seconds by default, which may be increased in the future as the number of solved challenges increases. This timeout can be configured in the *pyproject.toml* file as follows:
+#### Running The Tests
+
+To run the tests for the solutions, run the pytest command:
+
+```bash
+# Run the pytest with the verbosity flag
+$ pytest -v
+
+test_c01.py::test_c01 PASSED                                                                                        [100%]
+```
+
+#### Timeout
+
+The timeout for every test is set to **60 seconds** by default, however it may be increased in the future if the solutions take longer to give the final result for the tests. This timeout can be configured in the *pyproject.toml* file as follows:
 
 ```
 [tool.pytest.ini_options]
 timeout = 60
-```
-
-#### Naming Format
-
-The tests have the same naming format as the solutions, with the addition of 'test_' prefix to indicate that they are tests:
-
->test\_s**XX**\_c**YY**
-
-#### Test Structure
-
-todo:
-
-```python
-#
-#   01 - Convert hex to base64
-#
-
-from solutions import s01_c01
-def test_s01_c01() -> None:
-    input = b"0123456789abcdef"
-    result = b"ASNFZ4mrze8="
-    
-    assert s01_c01(input) == result
-```
-
-#### Running Tests
-
-To run the tests for the solutions, run the pytest command with the verbosity flag:
-
-```bash
-$ pytest -v
-
-test_solutions.py::test_s01_c01 PASSED                                                                              [100%]
 ```
 
 ## Table Of Contents
