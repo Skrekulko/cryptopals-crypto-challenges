@@ -89,87 +89,99 @@ timeout = 60
 ```
 
 ## Table Of Contents
-* Set 1: Basics
-  1. Convert hex to base64 :heavy_check_mark:
-  2. Fixed XOR :heavy_check_mark:
-  3. Single-byte XOR cipher :heavy_check_mark:
-  4. Detect single-character XOR :heavy_check_mark:
-  5. Implement repeating-key XOR :heavy_check_mark:
-  6. Break repeating-key XOR :heavy_check_mark:
-  7. AES in ECB mode :heavy_check_mark:
-  8. Detect AES in ECB mode :heavy_check_mark:
-  
-* Set 2: Block crypto
-  1. Implement PKCS#7 padding :heavy_check_mark:
-  2. Implement CBC mode :heavy_check_mark:
-  3. An ECB/CBC detection oracle :heavy_check_mark:
-  4. Byte-at-a-time ECB decryption (Simple) :heavy_check_mark:
-  5. ECB cut-and-paste :heavy_check_mark:
-  6. Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:
-  7. PKCS#7 padding validation :heavy_check_mark:
-  8. CBC bitflipping attacks :x:
 
-* Set 3: Block & stream crypto
-  1. The CBC padding oracle :x:
-  2. Implement CTR, the stream cipher mode :x:
-  3. Break fixed-nonce CTR mode using substitutions :x:
-  4. Break fixed-nonce CTR statistically :x:
-  5. Implement the MT19937 Mersenne Twister RNG :x:
-  6. Crack an MT19937 seed :x:
-  7. Clone an MT19937 RNG from its output :x:
-  8. Create the MT19937 stream cipher and break it :x:
-
-* Set 4: Stream crypto and randomness
-  1. Break "random access read/write" AES CTR :x:
-  2. CTR bitflipping :x:
-  3. Recover the key from CBC with IV=Key :x:
-  4. Implement a SHA-1 keyed MAC :x:
-  5. Break a SHA-1 keyed MAC using length extension :x:
-  6. Break an MD4 keyed MAC using length extension :x:
-  7. Implement and break HMAC-SHA1 with an artificial timing leak :x:
-  8. Break HMAC-SHA1 with a slightly less artificial timing leak :x:
-
-* Set 5: Diffie-Hellman and friends
-  1. Implement Diffie-Hellman :x:
-  2. Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :x:
-  3. Implement DH with negotiated groups, and break with malicious "g" parameters :x:
-  4. Implement Secure Remote Password (SRP) :x:
-  5. Break SRP with a zero key :x:
-  6. Offline dictionary attack on simplified SRP :x:
-  7. Implement RSA :x:
-  8. Implement an E=3 RSA Broadcast attack :x:
-
-* Set 6: RSA and DSA
-  1. Implement unpadded message recovery oracle :x:
-  2. Bleichenbacher's e=3 RSA Attack :x:
-  3. DSA key recovery from nonce :x:
-  4. DSA nonce recovery from repeated nonce :x:
-  5. DSA parameter tampering :x:
-  6. RSA parity oracle :x: 
-  7. Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :x:
-  8. Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :x:
-
-* Set 7: Hashes
-  1. CBC-MAC Message Forgery :x:
-  2. Hashing with CBC-MAC :x:
-  3. Compression Ratio Side-Channel Attacks :x:
-  4. Iterated Hash Function Multicollisions :x:
-  5. Kelsey and Schneier's Expandable Messages :x:
-  6. Kelsey and Kohno's Nostradamus Attack :x:
-  7. MD4 Collisions :x:
-  8. RC4 Single-Byte Biases :x:
-
-* Set 8: Abstract Algebra
-  1. Diffie-Hellman Revisited: Small Subgroup Confinement :x:
-  2. Pollard's Method for Catching Kangaroos :x:
-  3. Elliptic Curve Diffie-Hellman and Invalid-Curve Attacks :x:
-  4. Single-Coordinate Ladders and Insecure Twists :x:
-  5. Duplicate-Signature Key Selection in ECDSA (and RSA) :x:
-  6. Key-Recovery Attacks on ECDSA with Biased Nonces :x:
-  7. Key-Recovery Attacks on GCM with Repeated Nonces :x:
-  8. Key-Recovery Attacks on GCM with a Truncated MAC :x:
-  9. Truncated-MAC GCM Revisited: Improving the Key-Recovery Attack via Ciphertext Length Extension :x:
-  10. Exploiting Implementation Errors in Diffie-Hellman :x:
+<ul>
+    <li><b>Set 1: Basics</b></li>
+    <ol type="1">
+        <li>Convert hex to base64 :heavy_check_mark:</li>
+        <li>Fixed XOR :heavy_check_mark:</li>
+        <li>Single-byte XOR cipher :heavy_check_mark:</li>
+        <li>Detect single-character XOR :heavy_check_mark:</li>
+        <li>Implement repeating-key XOR :heavy_check_mark:</li>
+        <li>Break repeating-key XOR :heavy_check_mark:</li>
+        <li>AES in ECB mode :heavy_check_mark:</li>
+        <li>Detect AES in ECB mode :heavy_check_mark:</li>
+    </ol>
+    <li><b>Set 2: Block crypto</b></li>
+    <ol type="1" start="9">
+        <li>Implement PKCS#7 padding :heavy_check_mark:</li>
+        <li>Implement CBC mode :heavy_check_mark:</li>
+        <li>An ECB/CBC detection oracle :heavy_check_mark:</li>
+        <li>Byte-at-a-time ECB decryption (Simple) :heavy_check_mark:</li>
+        <li>ECB cut-and-paste :heavy_check_mark:</li>
+        <li>Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:</li>
+        <li>PKCS#7 padding validation :heavy_check_mark:</li>
+        <li>CBC bitflipping attacks :x:</li>
+    </ol>
+    <li><b>Set 3: Block & stream crypto</b></li>
+    <ol type="1" start="17">
+        <li>The CBC padding oracle :x:</li>
+        <li>Implement CTR, the stream cipher mode :x:</li>
+        <li>Break fixed-nonce CTR mode using substitutions :x:</li>
+        <li>Break fixed-nonce CTR statistically :x:</li>
+        <li>Implement the MT19937 Mersenne Twister RNG :x:</li>
+        <li>Crack an MT19937 seed :x:</li>
+        <li>Clone an MT19937 RNG from its output :x:</li>
+        <li>Create the MT19937 stream cipher and break it :x:</li>
+    </ol>
+    <li><b>Set 4: Stream crypto and randomness</b></li>
+    <ol type="1" start="25">
+        <li>Break "random access read/write" AES CTR :x:</li>
+        <li>CTR bitflipping :x:</li>
+        <li>Recover the key from CBC with IV=Key :x:</li>
+        <li>Implement a SHA-1 keyed MAC :x:</li>
+        <li>Break a SHA-1 keyed MAC using length extension :x:</li>
+        <li>Break an MD4 keyed MAC using length extension :x:</li>
+        <li>Implement and break HMAC-SHA1 with an artificial timing leak :x:</li>
+        <li>Break HMAC-SHA1 with a slightly less artificial timing leak :x:</li>
+    </ol>
+    <li><b>Set 5: Diffie-Hellman and friends</b></li>
+    <ol type="1" start="33">
+        <li>Implement Diffie-Hellman :x:</li>
+        <li>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :x:</li>
+        <li>Implement DH with negotiated groups, and break with malicious "g" parameters :x:</li>
+        <li>Implement Secure Remote Password (SRP) :x:</li>
+        <li>Break SRP with a zero key :x:</li>
+        <li>Offline dictionary attack on simplified SRP :x:</li>
+        <li>Implement RSA :x:</li>
+        <li>Implement an E=3 RSA Broadcast attack :x:</li>
+    </ol>
+    <li><b>Set 6: RSA and DSA</b></li>
+    <ol type="1" start="41">
+        <li>Implement unpadded message recovery oracle :x:</li>
+        <li>Bleichenbacher's e=3 RSA Attack :x:</li>
+        <li>DSA key recovery from nonce :x:</li>
+        <li>DSA nonce recovery from repeated nonce :x:</li>
+        <li>DSA parameter tampering :x:</li>
+        <li>RSA parity oracle :x:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :x:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :x:</li>
+    </ol>
+    <li><b>Set 7: Hashes</b></li>
+    <ol type="1" start="49">
+        <li>CBC-MAC Message Forgery :x:</li>
+        <li>Hashing with CBC-MAC :x:</li>
+        <li>Compression Ratio Side-Channel Attacks :x:</li>
+        <li>Iterated Hash Function Multicollisions :x:</li>
+        <li>Kelsey and Schneier's Expandable Messages :x:</li>
+        <li>Kelsey and Kohno's Nostradamus Attack :x:</li>
+        <li>MD4 Collisions :x:</li>
+        <li>RC4 Single-Byte Biases :x:</li>
+    </ol>
+    <li><b>Set 8: Abstract Algebra</b></li>
+    <ol type="1" start="57">
+        <li>Diffie-Hellman Revisited: Small Subgroup Confinement :x:</li>
+        <li>Pollard's Method for Catching Kangaroos :x:</li>
+        <li>Elliptic Curve Diffie-Hellman and Invalid-Curve Attacks :x:</li>
+        <li>Single-Coordinate Ladders and Insecure Twists :x:</li>
+        <li>Duplicate-Signature Key Selection in ECDSA (and RSA) :x:</li>
+        <li>Key-Recovery Attacks on ECDSA with Biased Nonces :x:</li>
+        <li>Key-Recovery Attacks on GCM with Repeated Nonces :x:</li>
+        <li>Key-Recovery Attacks on GCM with a Truncated MAC :x:</li>
+        <li>Truncated-MAC GCM Revisited: Improving the Key-Recovery Attack via Ciphertext Length Extension :x:</li>
+        <li>Exploiting Implementation Errors in Diffie-Hellman :x:</li>
+    </ol>
+</ul>
 
 ## License
 Everything in this repository is released under the terms of the MIT License. For more information, please see the file "LICENSE".
