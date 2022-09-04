@@ -11,19 +11,40 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
-## Solutions
+## Structure Of This Project
 
-### Naming Format
+    .
+    ├── s01                     # Set 1 - Basics
+    │   ├── c01                 # Challenge 1 - Convert hex to base64
+    │   |   ├── README.md       # README for challenge 1
+    │   |   ├── c01.py          # Solution for challenge 1
+    |   |   └── test_c01.py     # Test for challenge 1 solution
+    |   ├── ...
+    |   ├── c04                 # Challenge 4 - Detect single-character XOR
+    │   |   ├── ...
+    │   |   ├── helper_c04.py   # Previous (refactored) code used for current solution
+    │   |   └── ...
+    |   └── ...
+    ├── s02                     # Set 2 - Block crypto
+    |   └── ...
+    ├── ...
+    ├── .gitignore
+    ├── LICENSE
+    ├── README.md
+    ├── pyproject.toml
+    └── requirements.txt
 
-To make it easier to distinguish the solutions and tests for each solution, a common name format was implemented. The name format for the solutions is:
+### Sets
 
->s**XX**\_c**YY**
+Each set of challenges has it's corresponding folder with the according number, e.g. the challenges from *Set 1 - Basics* reside in folder **s01**.
 
-where **XX** represents the number of the set, while **YY** represents the number of the challenge.
+### Challenges
 
-### Where To Put Your Solution
+Every challenge has it's corresponding folder with the according number, e.g. the *Challenge 1 - Convert hex to base64* has it's own folder **c01**.
 
-The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for challenge _Convert hex to base64_ must be inside of the **s01_c01()** function. Outside of the corresponding function, any code can be written as long as it returns the result (solution) for further testing.
+#### Solution
+
+The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for *Challenge 1 - Convert hex to base64* must return the result (solution) from the **c01()** function. Any "helper" code can be written outside of the corresponding function as long as it returns the result for futher testing. The solution is available in a python file named after the folder name, e.g. solution for *Challenge 1 - Convert hex to base64* is in **c01.py**.
 
 ```python
 #
@@ -33,12 +54,35 @@ The solution for the particular challenge must be included within the correspond
 def helper_function(input):
     ...
 
-def s01_c01(input):
+def c01(input):
     ...
 
     return solution
-
 ```
+
+#### Test
+
+Test for the solution has a *"test\_"* prefix added to it, e.g. test for solution *c01.py* is in **test\_c01.py**. The test is always calling the corresponding method for the solution, e.g. *test\_c01()* must call **c01()**:
+
+```python
+#
+#   01 - Convert hex to base64
+#
+
+from c01 import c01
+
+def test_c01() -> None:
+    input = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    result = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
+    
+    assert c01(input) == result
+```
+
+(The result is visible on the cryptopals site, so no spoiler here.)
+
+#### Helper
+
+Helper contains (refactored) code from previous solutions that is used for the current challenge. It has a *"helper\_"* prefix added to it, e.g. helper for solution *c04.py* is in **helper\_c04.py**.
 
 ## How To Run
 
