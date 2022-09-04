@@ -56,14 +56,23 @@ $ pip3 install virtualenv
 $ python3 -m virtualenv -p python3 venv
 
 # Activate The Virtual Environment
-source venv/bin/activate
+$ source venv/bin/activate
 ```
 
 #### Deactivation
 
 ```shell
-# Deactivate The Virtual Environment After Being Done With The Challenges
-deactivate
+# Deactivate The Virtual Environment After Being Done Running This Project
+(venv) $ deactivate
+```
+
+### Dependencies
+
+The dependencies must be installed for everything to work properly by running the following command:
+
+```python
+# Install The Dependencies For The Virtual Environment
+(venv) $ python -m pip install -r requirements.txt
 ```
 
 ### Tests
@@ -73,8 +82,8 @@ deactivate
 To run the tests for the solutions, run the pytest command:
 
 ```bash
-# Run the pytest with the verbosity flag
-$ pytest -v
+# Run pytest With The Verbosity Flag
+(venv) $ pytest -v
 
 test_c01.py::test_c01 PASSED                                                                                        [100%]
 ```
