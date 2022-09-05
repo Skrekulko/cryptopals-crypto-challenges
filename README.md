@@ -11,19 +11,40 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
-## Solutions
+## Structure Of This Project
 
-### Naming Format
+    .
+    ├── s01                     # Set 1 - Basics
+    │   ├── c01                 # Challenge 1 - Convert hex to base64
+    │   |   ├── README.md       # README for challenge 1
+    │   |   ├── c01.py          # Solution for challenge 1
+    |   |   └── test_c01.py     # Test for challenge 1 solution
+    |   ├── ...
+    |   ├── c04                 # Challenge 4 - Detect single-character XOR
+    │   |   ├── ...
+    │   |   ├── helper_c04.py   # Previous (refactored) code used for current solution
+    │   |   └── ...
+    |   └── ...
+    ├── s02                     # Set 2 - Block crypto
+    |   └── ...
+    ├── ...
+    ├── .gitignore
+    ├── LICENSE
+    ├── README.md
+    ├── pyproject.toml
+    └── requirements.txt
 
-To make it easier to distinguish the solutions and tests for each solution, a common name format was implemented. The name format for the solutions is:
+### Sets
 
->s**XX**\_c**YY**
+Each set of challenges has it's corresponding folder with the according number, e.g. the challenges from *Set 1 - Basics* reside in folder **s01**.
 
-where **XX** represents the number of the set, while **YY** represents the number of the challenge.
+### Challenges
 
-### Where To Put Your Solution
+Every challenge has it's corresponding folder with the according number, e.g. the *Challenge 1 - Convert hex to base64* has it's own folder **c01**.
 
-The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for challenge _Convert hex to base64_ must be inside of the **s01_c01()** function. Outside of the corresponding function, any code can be written as long as it returns the result (solution) for further testing.
+#### Solution
+
+The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for *Challenge 1 - Convert hex to base64* must return the result (solution) from the **c01()** function. Any "helper" code can be written outside of the corresponding function as long as it returns the result for futher testing. The solution is available in a python file named after the folder name, e.g. solution for *Challenge 1 - Convert hex to base64* is in **c01.py**.
 
 ```python
 #
@@ -33,12 +54,35 @@ The solution for the particular challenge must be included within the correspond
 def helper_function(input):
     ...
 
-def s01_c01(input):
+def c01(input):
     ...
 
     return solution
-
 ```
+
+#### Test
+
+Test for the solution has a *"test\_"* prefix added to it, e.g. test for solution *c01.py* is in **test\_c01.py**. The test is always calling the corresponding method for the solution, e.g. *test\_c01()* must call **c01()**:
+
+```python
+#
+#   01 - Convert hex to base64
+#
+
+from c01 import c01
+
+def test_c01() -> None:
+    input = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    result = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
+    
+    assert c01(input) == result
+```
+
+(The result is visible on the cryptopals site, so no spoiler here.)
+
+#### Helper
+
+Helper contains (refactored) code from previous solutions that is used for the current challenge. It has a *"helper\_"* prefix added to it, e.g. helper for solution *c04.py* is in **helper\_c04.py**.
 
 ## How To Run
 
@@ -56,140 +100,141 @@ $ pip3 install virtualenv
 $ python3 -m virtualenv -p python3 venv
 
 # Activate The Virtual Environment
-source venv/bin/activate
+$ source venv/bin/activate
 ```
 
 #### Deactivation
 
 ```shell
-# Deactivate The Virtual Environment After Being Done With The Challenges
-deactivate
+# Deactivate The Virtual Environment After Being Done Running This Project
+(venv) $ deactivate
+```
+
+### Dependencies
+
+The dependencies must be installed for everything to work properly by running the following command:
+
+```python
+# Install The Dependencies For The Virtual Environment
+(venv) $ python -m pip install -r requirements.txt
 ```
 
 ### Tests
 
-For testing, the *pytest* framework is used to compare written solutions to existing solutions of solved challenges. Aside from *pytest*, *pytest-timeout* is used to abort tests when the specified amount of time is exceeded. The timeout is set to 60 seconds by default, which may be increased in the future as the number of solved challenges increases. This timeout can be configured in the *pyproject.toml* file as follows:
+#### Running The Tests
+
+To run the tests for the solutions, run the pytest command:
+
+```bash
+# Run pytest With The Verbosity Flag
+(venv) $ pytest -v
+
+test_c01.py::test_c01 PASSED                                                                                        [100%]
+```
+
+#### Timeout
+
+The timeout for every test is set to **60 seconds** by default, however it may be increased in the future if the solutions take longer to give the final result for the tests. This timeout can be configured in the *pyproject.toml* file as follows:
 
 ```
 [tool.pytest.ini_options]
 timeout = 60
 ```
 
-#### Naming Format
-
-The tests have the same naming format as the solutions, with the addition of 'test_' prefix to indicate that they are tests:
-
->test\_s**XX**\_c**YY**
-
-#### Test Structure
-
-todo:
-
-```python
-#
-#   01 - Convert hex to base64
-#
-
-from solutions import s01_c01
-def test_s01_c01() -> None:
-    input = b"0123456789abcdef"
-    result = b"ASNFZ4mrze8="
-    
-    assert s01_c01(input) == result
-```
-
-#### Running Tests
-
-To run the tests for the solutions, run the pytest command with the verbosity flag:
-
-```bash
-$ pytest -v
-
-test_solutions.py::test_s01_c01 PASSED                                                                              [100%]
-```
-
 ## Table Of Contents
-* Set 1: Basics
-  1. Convert hex to base64 :heavy_check_mark:
-  2. Fixed XOR :heavy_check_mark:
-  3. Single-byte XOR cipher :heavy_check_mark:
-  4. Detect single-character XOR :heavy_check_mark:
-  5. Implement repeating-key XOR :heavy_check_mark:
-  6. Break repeating-key XOR :heavy_check_mark:
-  7. AES in ECB mode :heavy_check_mark:
-  8. Detect AES in ECB mode :heavy_check_mark:
-  
-* Set 2: Block crypto
-  1. Implement PKCS#7 padding :heavy_check_mark:
-  2. Implement CBC mode :heavy_check_mark:
-  3. An ECB/CBC detection oracle :heavy_check_mark:
-  4. Byte-at-a-time ECB decryption (Simple) :heavy_check_mark:
-  5. ECB cut-and-paste :heavy_check_mark:
-  6. Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:
-  7. PKCS#7 padding validation :heavy_check_mark:
-  8. CBC bitflipping attacks :x:
 
-* Set 3: Block & stream crypto
-  1. The CBC padding oracle :x:
-  2. Implement CTR, the stream cipher mode :x:
-  3. Break fixed-nonce CTR mode using substitutions :x:
-  4. Break fixed-nonce CTR statistically :x:
-  5. Implement the MT19937 Mersenne Twister RNG :x:
-  6. Crack an MT19937 seed :x:
-  7. Clone an MT19937 RNG from its output :x:
-  8. Create the MT19937 stream cipher and break it :x:
-
-* Set 4: Stream crypto and randomness
-  1. Break "random access read/write" AES CTR :x:
-  2. CTR bitflipping :x:
-  3. Recover the key from CBC with IV=Key :x:
-  4. Implement a SHA-1 keyed MAC :x:
-  5. Break a SHA-1 keyed MAC using length extension :x:
-  6. Break an MD4 keyed MAC using length extension :x:
-  7. Implement and break HMAC-SHA1 with an artificial timing leak :x:
-  8. Break HMAC-SHA1 with a slightly less artificial timing leak :x:
-
-* Set 5: Diffie-Hellman and friends
-  1. Implement Diffie-Hellman :x:
-  2. Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :x:
-  3. Implement DH with negotiated groups, and break with malicious "g" parameters :x:
-  4. Implement Secure Remote Password (SRP) :x:
-  5. Break SRP with a zero key :x:
-  6. Offline dictionary attack on simplified SRP :x:
-  7. Implement RSA :x:
-  8. Implement an E=3 RSA Broadcast attack :x:
-
-* Set 6: RSA and DSA
-  1. Implement unpadded message recovery oracle :x:
-  2. Bleichenbacher's e=3 RSA Attack :x:
-  3. DSA key recovery from nonce :x:
-  4. DSA nonce recovery from repeated nonce :x:
-  5. DSA parameter tampering :x:
-  6. RSA parity oracle :x: 
-  7. Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :x:
-  8. Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :x:
-
-* Set 7: Hashes
-  1. CBC-MAC Message Forgery :x:
-  2. Hashing with CBC-MAC :x:
-  3. Compression Ratio Side-Channel Attacks :x:
-  4. Iterated Hash Function Multicollisions :x:
-  5. Kelsey and Schneier's Expandable Messages :x:
-  6. Kelsey and Kohno's Nostradamus Attack :x:
-  7. MD4 Collisions :x:
-  8. RC4 Single-Byte Biases :x:
-
-* Set 8: Abstract Algebra
-  1. Diffie-Hellman Revisited: Small Subgroup Confinement :x:
-  2. Pollard's Method for Catching Kangaroos :x:
-  3. Elliptic Curve Diffie-Hellman and Invalid-Curve Attacks :x:
-  4. Single-Coordinate Ladders and Insecure Twists :x:
-  5. Duplicate-Signature Key Selection in ECDSA (and RSA) :x:
-  6. Key-Recovery Attacks on ECDSA with Biased Nonces :x:
-  7. Key-Recovery Attacks on GCM with Repeated Nonces :x:
-  8. Key-Recovery Attacks on GCM with a Truncated MAC :x:
-  9. Truncated-MAC GCM Revisited: Improving the Key-Recovery Attack via Ciphertext Length Extension :x:
-  10. Exploiting Implementation Errors in Diffie-Hellman :x:
+<ul>
+    <li><b>Set 1: Basics</b></li>
+    <ol type="1">
+        <li>Convert hex to base64 :heavy_check_mark:</li>
+        <li>Fixed XOR :heavy_check_mark:</li>
+        <li>Single-byte XOR cipher :heavy_check_mark:</li>
+        <li>Detect single-character XOR :heavy_check_mark:</li>
+        <li>Implement repeating-key XOR :heavy_check_mark:</li>
+        <li>Break repeating-key XOR :heavy_check_mark:</li>
+        <li>AES in ECB mode :heavy_check_mark:</li>
+        <li>Detect AES in ECB mode :heavy_check_mark:</li>
+    </ol>
+    <li><b>Set 2: Block crypto</b></li>
+    <ol type="1" start="9">
+        <li>Implement PKCS#7 padding :heavy_check_mark:</li>
+        <li>Implement CBC mode :heavy_check_mark:</li>
+        <li>An ECB/CBC detection oracle :heavy_check_mark:</li>
+        <li>Byte-at-a-time ECB decryption (Simple) :heavy_check_mark:</li>
+        <li>ECB cut-and-paste :heavy_check_mark:</li>
+        <li>Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:</li>
+        <li>PKCS#7 padding validation :heavy_check_mark:</li>
+        <li>CBC bitflipping attacks :x:</li>
+    </ol>
+    <li><b>Set 3: Block & stream crypto</b></li>
+    <ol type="1" start="17">
+        <li>The CBC padding oracle :x:</li>
+        <li>Implement CTR, the stream cipher mode :x:</li>
+        <li>Break fixed-nonce CTR mode using substitutions :x:</li>
+        <li>Break fixed-nonce CTR statistically :x:</li>
+        <li>Implement the MT19937 Mersenne Twister RNG :x:</li>
+        <li>Crack an MT19937 seed :x:</li>
+        <li>Clone an MT19937 RNG from its output :x:</li>
+        <li>Create the MT19937 stream cipher and break it :x:</li>
+    </ol>
+    <li><b>Set 4: Stream crypto and randomness</b></li>
+    <ol type="1" start="25">
+        <li>Break "random access read/write" AES CTR :x:</li>
+        <li>CTR bitflipping :x:</li>
+        <li>Recover the key from CBC with IV=Key :x:</li>
+        <li>Implement a SHA-1 keyed MAC :x:</li>
+        <li>Break a SHA-1 keyed MAC using length extension :x:</li>
+        <li>Break an MD4 keyed MAC using length extension :x:</li>
+        <li>Implement and break HMAC-SHA1 with an artificial timing leak :x:</li>
+        <li>Break HMAC-SHA1 with a slightly less artificial timing leak :x:</li>
+    </ol>
+    <li><b>Set 5: Diffie-Hellman and friends</b></li>
+    <ol type="1" start="33">
+        <li>Implement Diffie-Hellman :x:</li>
+        <li>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :x:</li>
+        <li>Implement DH with negotiated groups, and break with malicious "g" parameters :x:</li>
+        <li>Implement Secure Remote Password (SRP) :x:</li>
+        <li>Break SRP with a zero key :x:</li>
+        <li>Offline dictionary attack on simplified SRP :x:</li>
+        <li>Implement RSA :x:</li>
+        <li>Implement an E=3 RSA Broadcast attack :x:</li>
+    </ol>
+    <li><b>Set 6: RSA and DSA</b></li>
+    <ol type="1" start="41">
+        <li>Implement unpadded message recovery oracle :x:</li>
+        <li>Bleichenbacher's e=3 RSA Attack :x:</li>
+        <li>DSA key recovery from nonce :x:</li>
+        <li>DSA nonce recovery from repeated nonce :x:</li>
+        <li>DSA parameter tampering :x:</li>
+        <li>RSA parity oracle :x:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :x:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :x:</li>
+    </ol>
+    <li><b>Set 7: Hashes</b></li>
+    <ol type="1" start="49">
+        <li>CBC-MAC Message Forgery :x:</li>
+        <li>Hashing with CBC-MAC :x:</li>
+        <li>Compression Ratio Side-Channel Attacks :x:</li>
+        <li>Iterated Hash Function Multicollisions :x:</li>
+        <li>Kelsey and Schneier's Expandable Messages :x:</li>
+        <li>Kelsey and Kohno's Nostradamus Attack :x:</li>
+        <li>MD4 Collisions :x:</li>
+        <li>RC4 Single-Byte Biases :x:</li>
+    </ol>
+    <li><b>Set 8: Abstract Algebra</b></li>
+    <ol type="1" start="57">
+        <li>Diffie-Hellman Revisited: Small Subgroup Confinement :x:</li>
+        <li>Pollard's Method for Catching Kangaroos :x:</li>
+        <li>Elliptic Curve Diffie-Hellman and Invalid-Curve Attacks :x:</li>
+        <li>Single-Coordinate Ladders and Insecure Twists :x:</li>
+        <li>Duplicate-Signature Key Selection in ECDSA (and RSA) :x:</li>
+        <li>Key-Recovery Attacks on ECDSA with Biased Nonces :x:</li>
+        <li>Key-Recovery Attacks on GCM with Repeated Nonces :x:</li>
+        <li>Key-Recovery Attacks on GCM with a Truncated MAC :x:</li>
+        <li>Truncated-MAC GCM Revisited: Improving the Key-Recovery Attack via Ciphertext Length Extension :x:</li>
+        <li>Exploiting Implementation Errors in Diffie-Hellman :x:</li>
+    </ol>
+</ul>
 
 ## License
 Everything in this repository is released under the terms of the MIT License. For more information, please see the file "LICENSE".
