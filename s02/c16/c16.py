@@ -32,7 +32,7 @@ class Oracle:
         
         return {"admin": is_admin, "decrypted": decrypted}
 
-def oracle_bit_flipping():
+def oracle_bit_flipping() -> bool:
     oracle = Oracle()
     
     # Detect Block Size And Required Padding Length For A New Block
