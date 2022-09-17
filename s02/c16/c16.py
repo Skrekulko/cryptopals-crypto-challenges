@@ -32,7 +32,7 @@ class Oracle:
         
         return {"admin": is_admin, "decrypted": decrypted}
 
-def c16():
+def oracle_bit_flipping():
     oracle = Oracle()
     
     # Detect Block Size And Required Padding Length For A New Block
@@ -69,3 +69,6 @@ def c16():
     decrypted = oracle.decrypt_and_check_admin(flipped)
     
     return decrypted["admin"]
+
+def c16():
+    return oracle_bit_flipping()
