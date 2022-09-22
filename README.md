@@ -116,7 +116,7 @@ The dependencies must be installed for everything to work properly by running th
 
 ```python
 # Install The Dependencies For The Virtual Environment
-(venv) $ python -m pip install -r requirements.txt
+(venv) $ python3 -m pip install -r requirements.txt
 ```
 
 ### Tests
@@ -164,11 +164,11 @@ timeout = 60
         <li>ECB cut-and-paste :heavy_check_mark:</li>
         <li>Byte-at-a-time ECB decryption (Harder) :heavy_check_mark:</li>
         <li>PKCS#7 padding validation :heavy_check_mark:</li>
-        <li>CBC bitflipping attacks :x:</li>
+        <li>CBC bitflipping attacks :heavy_check_mark:</li>
     </ol>
     <li><b>Set 3: Block & stream crypto</b></li>
     <ol type="1" start="17">
-        <li>The CBC padding oracle :x:</li>
+        <li>The CBC padding oracle :heavy_check_mark:</li>
         <li>Implement CTR, the stream cipher mode :x:</li>
         <li>Break fixed-nonce CTR mode using substitutions :x:</li>
         <li>Break fixed-nonce CTR statistically :x:</li>
