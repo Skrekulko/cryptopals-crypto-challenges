@@ -45,12 +45,12 @@ class AES128CBC:
         for i in range(1, n_blocks):
             out_blocks.append(fixed_xor(AES.new(key, AES.MODE_ECB).decrypt(in_blocks[i]), in_blocks[i - 1]))
         
-        decrypted = b"".join(out_blocks), AES128CBC.block_size
+        decrypted = b"".join(out_blocks)
         
         try:
             PKCS7.strip(decrypted, AES128CBC.block_size)
         except ValueError:
-            print("Got a padding error just as expected")
+            raise ValueError("Incorrect padding.")
 #
 #   11 - An ECB/CBC detection oracle
 #

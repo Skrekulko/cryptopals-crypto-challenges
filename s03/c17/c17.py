@@ -25,8 +25,7 @@ class Oracle:
     
     def encrypt(self) -> bytes:
         string = random.choice(Oracle.strings)
-        print(len(string))
-        print(string)
+        print(PKCS7.padding(string, 16))
         iv = Generator.generate_key_128b()
         encrypted = AES128CBC.encrypt(string, self.key, iv)
         
@@ -34,6 +33,8 @@ class Oracle:
         
     def decrypt(self, cipher: bytes, iv: bytes) -> (bool, bytes):
         string = AES128CBC.decrypt(cipher, self.key, iv)
+
+from Crypto.Cipher import AES
 
 def c17():
     oracle = Oracle()
@@ -48,24 +49,81 @@ def c17():
     n_blocks = len(encrypted_blocks)
     iv = cipher["iv"]
     
-    # Try Every Padding Length (1 - 15)
+    # [Refactored] Find Initial Padding Size
+    padding_size = 0
     for i in range(block_size):
-        # Crafted Block
-        selected_block = encrypted_blocks[n_blocks - 2]
-        crafted_block = selected_block[:block_size - (i + 1)] + b"\xff" + selected_block[block_size - i:]
+        # Previous Ciphertext Block
+        previous_block = encrypted_blocks[-2]
         
-        # Flipping
+        # Predicted Padding Byte And Incorrect Padding Byte
+        predicted_byte = (block_size - i).to_bytes(1, "big")
+        incorrect_byte = ((block_size - i) + 1).to_bytes(1, "big")
+        
+        # Corresponding Byte Of Previous Ciphertext Block
+        previous_byte = previous_block[i].to_bytes(1, "big")
+        
+        # Before XOR Byte Of Current Ciphertext Block
+        before_xor_byte = fixed_xor(previous_byte, predicted_byte)
+        
+        # Crafted Byte And Block
+        crafted_byte = fixed_xor(before_xor_byte, incorrect_byte)
+        crafted_block = previous_block[:i] + crafted_byte + previous_block[(i + 1):]
+    
+        # Bit-Flipping
         flipped_blocks = encrypted_blocks[:]
-        flipped_blocks[n_blocks - 2] = crafted_block
-        flipped = b"".join(flipped_blocks)
+        flipped_blocks[-2] = crafted_block
+        flipped_cipher = b"".join(flipped_blocks)
     
         try:
-            print(i)
-            print(encrypted_blocks[n_blocks - 2])
-            print(flipped_blocks[n_blocks - 2])
-            oracle.decrypt(encrypted, iv)
-            oracle.decrypt(flipped, iv)
-        except ValueError:
+            oracle.decrypt(flipped_cipher, iv)
             continue
-
+        except ValueError:
+            padding_size = block_size - i
+            break
+    
+    print(f"found padding length = {padding_length}")
+    print(f"found padding size = {padding_size}")
+        
+    exit()
+    # Decrypt With Known Padding
+    decrypted_block = b""
+    to_xor = encrypted_blocks[n_blocks - 2][block_size - padding_length:]
+    padding = padding_length.to_bytes(1, "big") * padding_length
+    decrypted_block = fixed_xor(to_xor, padding)
+    
+    # Byte Position
+    for i in range(block_size):
+        # Crafted Padding
+        current_padding_length = padding_length + (i + 1)
+        crafted_padding = current_padding_length.to_bytes(1, "big") * padding_length
+        
+        # Bit-Flipping (256 Different Combinations)
+        for j in range(255):
+            # XORed Bytes
+            xored_bytes = fixed_xor(crafted_padding, decrypted_block)
+            
+            # Crafted Bytes
+            crafted_bytes = j.to_bytes(1, "big") + xored_bytes
+            
+            # Bit-Flipped Block
+            flipped_block = b"\x00" * (block_size - len(crafted_bytes)) + crafted_bytes
+            
+            # Bit-Flipped Cipher
+            flipped_blocks = encrypted_blocks[:]
+            flipped_blocks[-2] = flipped_block
+            flipped_cipher = b"".join(flipped_blocks)
+            
+            # Decrypt And Check Padding
+            try:
+                oracle.decrypt(flipped_cipher, iv)
+                found_byte = j.to_bytes(1, "big")
+                padding_byte = current_padding_length.to_bytes(1, "big")
+                decrypted_byte = fixed_xor(found_byte, padding_byte)
+                decrypted_block = decrypted_byte + decrypted_block
+                print(decrypted_block)
+                break
+            except ValueError:
+                continue
+            
+        break
     return False
