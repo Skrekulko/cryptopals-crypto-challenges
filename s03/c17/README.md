@@ -1,4 +1,5 @@
 ### The CBC padding oracle
+
 This is the best-known attack on modern block-cipher cryptography.
 
 Combine your padding code and your CBC code to write two functions.
@@ -23,6 +24,7 @@ MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93
 The second function should consume the ciphertext produced by the first function, decrypt it, check its padding, and return true or false depending on whether the padding is valid.
 
 #### What you're doing here.
+
 > This pair of functions approximates AES-CBC encryption as its deployed serverside in web applications; the second function models the server's consumption of an encrypted session token, as if it was a cookie.
 
 It turns out that it's possible to decrypt the ciphertexts provided by the first function.
