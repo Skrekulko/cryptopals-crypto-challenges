@@ -25,7 +25,6 @@ class Oracle:
     
     def encrypt(self) -> bytes:
         string = random.choice(Oracle.strings)
-        print(PKCS7.padding(string, 16))
         iv = Generator.generate_key_128b()
         encrypted = AES128CBC.encrypt(string, self.key, iv)
         
@@ -34,9 +33,98 @@ class Oracle:
     def decrypt(self, cipher: bytes, iv: bytes) -> (bool, bytes):
         string = AES128CBC.decrypt(cipher, self.key, iv)
 
-from Crypto.Cipher import AES
+# Find Initial Padding Size
+def cbc_find_padding_size(oracle: Oracle, ciphertext_block: bytes, iv: bytes, block_size: int) -> int:
+    # Initial Padding Size
+    padding_size = 0
+    
+    # Iterate Through All Possible Padding Sizes
+    for i in range(block_size):
+        # Predicted Padding Byte And Incorrect Padding Byte
+        predicted_byte = (block_size - i).to_bytes(1, "big")
+        incorrect_byte = ((block_size - i) + 1).to_bytes(1, "big")
+        
+        # Corresponding Byte Of The IV
+        iv_byte = iv[i].to_bytes(1, "big")
+        
+        # Before XOR Byte Of Current Ciphertext Block
+        before_xor_byte = fixed_xor(iv_byte, predicted_byte)
+        
+        # Crafted Byte And Block
+        crafted_byte = fixed_xor(before_xor_byte, incorrect_byte)
+        crafted_block = iv[:i] + crafted_byte + iv[(i + 1):]
+    
+        # Bit-Flipping
+        flipped_cipher = crafted_block + ciphertext_block
+    
+        # Try Decrypting Using The Oracle
+        try:
+            oracle.decrypt(flipped_cipher, iv)
+            continue
+        # Incorrect Padding
+        except ValueError:
+            padding_size = block_size - i
+            break
 
-def c17():
+    return padding_size
+
+# Brute-Force Initial Padding
+def cbc_brute_force_padding(oracle: Oracle, ciphertext_block: bytes, iv: bytes, block_size: int) -> bytes:
+    # Brute-Force Last Padding Byte
+    for i in range(256):
+        # Crafted IV
+        crafted_byte = i.to_bytes(1, "big")            
+        crafted_iv = iv[:-1] + crafted_byte
+        
+        # Try To Decrypt And Check Last Padding For '\x02'
+        try:
+            oracle.decrypt(ciphertext_block, crafted_iv)
+        except ValueError:
+            # Brute-Force Previous Byte
+            for j in range(256):
+                # Crafted Previous Padding Byte
+                crafted_previous_byte = j.to_bytes(1, "big")
+                
+                # Crafted IV
+                crafted_iv = iv[:-2] + crafted_previous_byte + crafted_byte
+                
+                # Try To Decrypt And Check '\x02\x02' Padding
+                try:
+                    oracle.decrypt(ciphertext_block, crafted_iv)
+                    
+                    # Corrupted Padding
+                    before_xor_byte = fixed_xor(iv[-2].to_bytes(1, "big"), b"\x02")
+                    xored_byte = fixed_xor(before_xor_byte, b"\x03")
+                    crafted_iv = iv[:-2] + xored_byte + crafted_byte
+                    
+                    # Try To Decrypt And Check Corrupted '\x03\x02' Padding
+                    try:
+                        oracle.decrypt(ciphertext_block, crafted_iv)
+                    except ValueError:
+                        before_xor_bytes = fixed_xor(b"\x02\x02", crafted_previous_byte + crafted_byte)
+                        return before_xor_bytes
+                except ValueError:
+                    continue
+            continue
+        # Previous Padding Byte May Be '\x02'
+        else:
+            # Corrupted Padding
+            before_xor_byte = fixed_xor(iv[-2].to_bytes(1, "big"), b"\x02")
+            xored_byte = fixed_xor(before_xor_byte, b"\x03")
+            crafted_iv = iv[:-2] + xored_byte + crafted_byte
+            
+            # Try To Decrypt And Check Corrupted '\x03\x02' Padding
+            try:
+                oracle.decrypt(ciphertext_block, crafted_iv)
+            except ValueError:
+                before_xor_bytes = fixed_xor(b"\x02\x02", iv[-2].to_bytes(1, "big") + crafted_byte)
+                return before_xor_bytes
+            
+            continue
+    
+    return b""
+    
+def decrypt_cbc_padding_oracle():
     oracle = Oracle()
     
     # Known Block Size
@@ -45,85 +133,77 @@ def c17():
     # Get Random Cipher
     cipher = oracle.encrypt()
     encrypted = cipher["encrypted"]
-    encrypted_blocks = [encrypted[i : i + block_size] for i in range(0, len(encrypted), block_size)]
-    n_blocks = len(encrypted_blocks)
     iv = cipher["iv"]
     
-    # [Refactored] Find Initial Padding Size
-    padding_size = 0
-    for i in range(block_size):
-        # Previous Ciphertext Block
-        previous_block = encrypted_blocks[-2]
-        
-        # Predicted Padding Byte And Incorrect Padding Byte
-        predicted_byte = (block_size - i).to_bytes(1, "big")
-        incorrect_byte = ((block_size - i) + 1).to_bytes(1, "big")
-        
-        # Corresponding Byte Of Previous Ciphertext Block
-        previous_byte = previous_block[i].to_bytes(1, "big")
-        
-        # Before XOR Byte Of Current Ciphertext Block
-        before_xor_byte = fixed_xor(previous_byte, predicted_byte)
-        
-        # Crafted Byte And Block
-        crafted_byte = fixed_xor(before_xor_byte, incorrect_byte)
-        crafted_block = previous_block[:i] + crafted_byte + previous_block[(i + 1):]
+    # Put Together The Ciphertext Blocks With IV
+    ciphertext_blocks = [encrypted[i : i + block_size] for i in range(0, len(encrypted), block_size)]
+    ciphertext_blocks = [iv] + ciphertext_blocks
+    n_blocks = len(ciphertext_blocks)
     
-        # Bit-Flipping
-        flipped_blocks = encrypted_blocks[:]
-        flipped_blocks[-2] = crafted_block
-        flipped_cipher = b"".join(flipped_blocks)
+    decrypted = b""
     
-        try:
-            oracle.decrypt(flipped_cipher, iv)
-            continue
-        except ValueError:
-            padding_size = block_size - i
-            break
-    
-    print(f"found padding length = {padding_length}")
-    print(f"found padding size = {padding_size}")
+    # Traverse All The Ciphertext Blocks (Skipping Initial IV)
+    for i in range(n_blocks - 1, 0, -1):
+        # Current Ciphertext Block
+        ciphertext_block = ciphertext_blocks[i]
         
-    exit()
-    # Decrypt With Known Padding
-    decrypted_block = b""
-    to_xor = encrypted_blocks[n_blocks - 2][block_size - padding_length:]
-    padding = padding_length.to_bytes(1, "big") * padding_length
-    decrypted_block = fixed_xor(to_xor, padding)
-    
-    # Byte Position
-    for i in range(block_size):
-        # Crafted Padding
-        current_padding_length = padding_length + (i + 1)
-        crafted_padding = current_padding_length.to_bytes(1, "big") * padding_length
+        # Previous Ciphertext Block (IV)
+        iv = ciphertext_blocks[i - 1]
         
-        # Bit-Flipping (256 Different Combinations)
-        for j in range(255):
+        # Find Padding Size Of The Current Ciphertext Block
+        padding_size = cbc_find_padding_size(
+            oracle,
+            ciphertext_block,
+            iv,
+            block_size
+        )
+        
+        # Before XOR Ciphertext Block Bytes
+        before_xor_bytes = b""
+        
+        # If Padding Size Is Not Zero
+        if padding_size != 0:
+            before_xor_bytes = fixed_xor(
+                iv[-padding_size:],
+                padding_size.to_bytes(1, "big") * padding_size
+            )
+        else:
+            # Brute-Force Initial Padding
+            before_xor_bytes = cbc_brute_force_padding(
+                oracle,
+                ciphertext_block,
+                iv,
+                block_size
+            )
+            
+            padding_size = len(before_xor_bytes)
+        
+        # Ciphertext Block Byte Position (Skipping Known Padding)
+        for j in range(padding_size, block_size):
+            # Crafted Padding (Without The nth Byte)
+            padding = (j + 1).to_bytes(1, "big") * j
+            
             # XORed Bytes
-            xored_bytes = fixed_xor(crafted_padding, decrypted_block)
+            xored_bytes = fixed_xor(padding, before_xor_bytes)
             
-            # Crafted Bytes
-            crafted_bytes = j.to_bytes(1, "big") + xored_bytes
-            
-            # Bit-Flipped Block
-            flipped_block = b"\x00" * (block_size - len(crafted_bytes)) + crafted_bytes
-            
-            # Bit-Flipped Cipher
-            flipped_blocks = encrypted_blocks[:]
-            flipped_blocks[-2] = flipped_block
-            flipped_cipher = b"".join(flipped_blocks)
-            
-            # Decrypt And Check Padding
-            try:
-                oracle.decrypt(flipped_cipher, iv)
-                found_byte = j.to_bytes(1, "big")
-                padding_byte = current_padding_length.to_bytes(1, "big")
-                decrypted_byte = fixed_xor(found_byte, padding_byte)
-                decrypted_block = decrypted_byte + decrypted_block
-                print(decrypted_block)
-                break
-            except ValueError:
-                continue
-            
-        break
-    return False
+            # Brute-Force Bit-Flipping For New Padding Byte
+            for k in range(256):
+                
+                # Crafted IV
+                crafted_iv = iv[:-(j + 1)] + k.to_bytes(1, "big") + xored_bytes
+                
+                # Try To Decrypt And Check Padding
+                try:
+                    oracle.decrypt(ciphertext_block, crafted_iv)
+                    before_xor_byte = fixed_xor(k.to_bytes(1, "big"), (j + 1).to_bytes(1, "big"))
+                    before_xor_bytes = before_xor_byte + before_xor_bytes
+                    break
+                except ValueError:
+                    continue
+                    
+        decrypted = fixed_xor(iv, before_xor_bytes) + decrypted
+        
+    return PKCS7.strip(decrypted, block_size)
+
+def c17():
+    return decrypt_cbc_padding_oracle()
