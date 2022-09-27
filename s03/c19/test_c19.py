@@ -3,7 +3,7 @@
 #
 
 from c19 import c19
-from helper_c19 import Generator
+from helper_c19 import Generator, AES128CTR
 import codecs
 from difflib import SequenceMatcher
 
@@ -57,8 +57,21 @@ def test_c19() -> None:
     # Nonce
     nonce = 0
     
+    # Decode
+    decoded = [codecs.decode(string, "base64") for string in strings]
+    
+    # Initialize New AES CTR
+    ctr = AES128CTR(key, nonce)
+    
+    # Transform Strings Into Ciphertexts
+    ciphertexts = [
+        ctr.transform(
+            codecs.decode(string, "base64")
+        ) for string in strings
+    ]
+    
     # Decrypt The Strings
-    plaintexts = c19(key, nonce)
+    plaintexts = c19(ciphertexts, key, nonce)
     
     # Minimal Ratio To Get A Point
     minimum_ratio = 0.75
