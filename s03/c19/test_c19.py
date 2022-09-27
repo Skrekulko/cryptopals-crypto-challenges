@@ -66,8 +66,8 @@ def test_c19() -> None:
     # Transform Strings Into Ciphertexts
     ciphertexts = [
         ctr.transform(
-            codecs.decode(string, "base64")
-        ) for string in strings
+            decoded_string
+        ) for decoded_string in decoded
     ]
     
     # Decrypt The Strings
@@ -81,9 +81,8 @@ def test_c19() -> None:
     
     # Actual Score
     score = 0
-    for (string, plaintext) in zip(strings, plaintexts):
-        decoded = codecs.decode(string, "base64")
-        if SequenceMatcher(None, decoded, plaintext).ratio() > minimum_ratio:
+    for (decoded_string, plaintext) in zip(decoded, plaintexts):
+        if SequenceMatcher(None, decoded_string, plaintext).ratio() > minimum_ratio:
             score += 1
     
     assert score >= minimum_score
