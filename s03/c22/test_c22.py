@@ -20,7 +20,7 @@ def test_c22() -> None:
     # Create A New Generator
     generator = MT19937(time_seed, version = "32")
     
-    # Generator A Random Number
+    # Generate A Random Number
     target_number = generator.extract_number()
     
     # Calculate Time Of Output
