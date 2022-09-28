@@ -1,5 +1,5 @@
 #
-#   22 - Crack an MT19937 seed
+#   21 - Implement the MT19937 Mersenne Twister RNG
 #
 
 # MT1937 Mersenne Twister RNG
