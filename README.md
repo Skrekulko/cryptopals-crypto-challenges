@@ -169,13 +169,13 @@ timeout = 60
     <li><b>Set 3: Block & stream crypto</b></li>
     <ol type="1" start="17">
         <li>The CBC padding oracle :heavy_check_mark:</li>
-        <li>Implement CTR, the stream cipher mode :x:</li>
-        <li>Break fixed-nonce CTR mode using substitutions :x:</li>
-        <li>Break fixed-nonce CTR statistically :x:</li>
-        <li>Implement the MT19937 Mersenne Twister RNG :x:</li>
-        <li>Crack an MT19937 seed :x:</li>
-        <li>Clone an MT19937 RNG from its output :x:</li>
-        <li>Create the MT19937 stream cipher and break it :x:</li>
+        <li>Implement CTR, the stream cipher mode :heavy_check_mark:</li>
+        <li>Break fixed-nonce CTR mode using substitutions :heavy_check_mark:</li>
+        <li>Break fixed-nonce CTR statistically :heavy_check_mark:</li>
+        <li>Implement the MT19937 Mersenne Twister RNG :heavy_check_mark:</li>
+        <li>Crack an MT19937 seed :heavy_check_mark:</li>
+        <li>Clone an MT19937 RNG from its output :heavy_check_mark:</li>
+        <li>Create the MT19937 stream cipher and break it :heavy_check_mark:</li>
     </ol>
     <li><b>Set 4: Stream crypto and randomness</b></li>
     <ol type="1" start="25">
