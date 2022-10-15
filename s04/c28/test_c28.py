@@ -2,7 +2,7 @@
 #   28 - Implement a SHA-1 keyed MAC
 #
 
-from c28 import SHA1
+from c28 import c28
 from Crypto.Hash import SHA1 as CryptoSHA1
 
 def test_c28() -> None:
@@ -10,16 +10,16 @@ def test_c28() -> None:
     message = b"abc"
     
     # Test Out Implementation
-    assert SHA1(message) == bytes.fromhex(CryptoSHA1.new(message).hexdigest())
+    assert c28(message) == bytes.fromhex(CryptoSHA1.new(message).hexdigest())
     
     # Key
     key = b"0123456789"
     
     # Get MAC Hash
-    mac = SHA1(key + message)
+    mac = c28(key + message)
     
     # Modify First Byte
-    modified_mac = SHA1(key + (b"d" + message[1:]))
+    modified_mac = c28(key + (b"d" + message[1:]))
     
     # Verify Both Hashes
     assert mac != modified_mac

@@ -118,3 +118,6 @@ def SHA1(M: bytes) -> bytes:
         H4 = (e + H4) & ((1 << 32) - 1)
         
     return bytes.fromhex("%08x%08x%08x%08x%08x" % (H0, H1, H2, H3, H4))
+    
+def c28(M: bytes) -> bytes:
+    return SHA1(M)
