@@ -60,7 +60,6 @@ def SHA1(M: bytes) -> bytes:
     
     # Setting The Initial Hash Value (H(0))
     H0 = 0x67452301
-    H0 = 0x67452301
     H1 = 0xefcdab89
     H2 = 0x98badcfe
     H3 = 0x10325476
