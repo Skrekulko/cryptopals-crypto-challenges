@@ -7,7 +7,7 @@ from Crypto.Hash import SHA1 as CryptoSHA1
 
 def test_c28() -> None:
     # Message
-    message = b"abc"
+    message = b"abc" * 64
     
     # Test Out Implementation
     assert c28(message) == bytes.fromhex(CryptoSHA1.new(message).hexdigest())

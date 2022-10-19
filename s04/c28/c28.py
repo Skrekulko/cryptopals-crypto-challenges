@@ -42,21 +42,30 @@ def SHA1_function(x: int, y: int, z: int, t: int) -> int:
     elif 60 <= t <= 79:
         return (x ^ y ^ z)
 
+# SHA-1 Padding      
+def SHA1_padding(M: bytes) -> bytes:
+    N = len(M) * 8                      # Length Of Message In Bits
+    
+    M = (
+        M
+        + b"\x80"                       # Append '1' ('\x80' -> '1000')
+        + b"\x00"                       # Append '0's
+        * ((-(N + 1 + 64) % 512) // 8)  # Until 'l + 1 + k ≡ 448 mod 556'
+        + N.to_bytes(8, "big")          # Append Message Length
+    )
+    
+    return M
+
 def SHA1(M: bytes) -> bytes:
     #
     # Preprocessing
     #
     
-    # Padding the Message
-    l = len(M) * 8                      # Length Of Message In Bits
-    M += b"\x80"                        # Append '1' ('\x80' -> '1000')
-    while (len(M) * 8) % 512 != 448:    # Append '0's Until 'l + 1 + k ≡ 448 mod 556'
-        M += b"\x00"
-    M += l.to_bytes(8, "big")           # Append Message Length
-    
+    # Padding The Message
+    M = SHA1_padding(M)
+        
     # Parsing The Message
-    M = [M[i : i + 512] for i in range(0, len(M), 512)]
-    N = len(M)
+    M = [M[i : i + 64] for i in range(0, len(M), 64)]
     
     # Setting The Initial Hash Value (H(0))
     H0 = 0x67452301
@@ -70,7 +79,7 @@ def SHA1(M: bytes) -> bytes:
     #
     
     # SHA-1 Hash Computation
-    for i in range(N):
+    for i in range(len(M)):
         # Prepare The Message Schedule, {'Wt'}
         W = []
         for t in range(80):
@@ -115,8 +124,8 @@ def SHA1(M: bytes) -> bytes:
         H2 = (c + H2) & ((1 << 32) - 1)
         H3 = (d + H3) & ((1 << 32) - 1)
         H4 = (e + H4) & ((1 << 32) - 1)
-        
-    return bytes.fromhex("%08x%08x%08x%08x%08x" % (H0, H1, H2, H3, H4))
+    
+    return b"".join(H.to_bytes(4, "big") for H in [H0, H1, H2, H3, H4])
     
 def c28(M: bytes) -> bytes:
     return SHA1(M)
