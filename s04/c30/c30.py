@@ -122,7 +122,7 @@ def MD4_padding(message: bytes, message_length = None) -> bytes:
 def md4_length_extension_attack(oracle: Oracle, original_mac: bytes, original_message: bytes, new_message: bytes) -> [bytes, bytes]:
     # Try Different Key Sizes
     for key_size in range(129):
-        # Forged Message '(original-message || glue-padding || new-message)'
+        # Forged Message '(key || original-message || glue-padding || new-message)'
         forged_message = MD4_padding(Generator.generate_random_bytes(key_size, key_size) + original_message)[key_size:] + new_message
         
         # Split Digest Into Registers
