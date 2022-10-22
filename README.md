@@ -179,14 +179,14 @@ timeout = 60
     </ol>
     <li><b>Set 4: Stream crypto and randomness</b></li>
     <ol type="1" start="25">
-        <li>Break "random access read/write" AES CTR :x:</li>
-        <li>CTR bitflipping :x:</li>
-        <li>Recover the key from CBC with IV=Key :x:</li>
-        <li>Implement a SHA-1 keyed MAC :x:</li>
-        <li>Break a SHA-1 keyed MAC using length extension :x:</li>
-        <li>Break an MD4 keyed MAC using length extension :x:</li>
-        <li>Implement and break HMAC-SHA1 with an artificial timing leak :x:</li>
-        <li>Break HMAC-SHA1 with a slightly less artificial timing leak :x:</li>
+        <li>Break "random access read/write" AES CTR :heavy_check_mark:</li>
+        <li>CTR bitflipping :heavy_check_mark:</li>
+        <li>Recover the key from CBC with IV=Key :heavy_check_mark:</li>
+        <li>Implement a SHA-1 keyed MAC :heavy_check_mark:</li>
+        <li>Break a SHA-1 keyed MAC using length extension :heavy_check_mark:</li>
+        <li>Break an MD4 keyed MAC using length extension :heavy_check_mark:</li>
+        <li>Implement and break HMAC-SHA1 with an artificial timing leak :heavy_check_mark:</li>
+        <li>Break HMAC-SHA1 with a slightly less artificial timing leak :heavy_check_mark:</li>
     </ol>
     <li><b>Set 5: Diffie-Hellman and friends</b></li>
     <ol type="1" start="33">
