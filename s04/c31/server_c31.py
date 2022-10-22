@@ -47,7 +47,11 @@ def insecure_compare(digest: bytes, signature: bytes) -> bool:
     return True
 
 app = Flask(__name__)
+
+# Insecure Compare Delay
 delay = 0.005
+
+# Randomly Generated 128-Bit Key
 key = Generator.generate_key_128b()
 
 # Get Server Key (Testing Purposes)
