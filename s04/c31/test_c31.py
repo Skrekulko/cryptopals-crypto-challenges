@@ -15,6 +15,6 @@ def test_c31() -> None:
     filename = b"foo"
     
     # Number Of Rounds (Incrases The Statistical Probability Of Guessing The Correct HMAC Bytes)
-    rounds = 2
+    rounds = 5
     
     assert c31(filename, rounds) == HMAC_SHA1(server_key, filename)
