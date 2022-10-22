@@ -40,7 +40,7 @@ def get_next_byte(known_bytes: bytes, filename: bytes, rounds: int) -> bytes:
     return best.to_bytes(1, "big")
 
 # HMAC Timing Attack
-def hmac_timing_attack(filename: bytes, rounds: int) -> bool:
+def hmac_timing_attack(filename: bytes, rounds: int) -> bytes:
     # Known Bytes Of HMAC
     known_bytes = b""
     
@@ -54,7 +54,7 @@ def hmac_timing_attack(filename: bytes, rounds: int) -> bool:
     if response.status_code == 200:
         return known_bytes
     else:
-        return None
+        raise Exception("Unable to correctly guess the HMAC!")
 
-def c31() -> None:
-    return hmac_timing_attack(b"foo", 10)
+def c31(filename: bytes, rounds: int) -> bytes:
+    return hmac_timing_attack(filename, rounds)
