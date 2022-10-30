@@ -12,7 +12,6 @@ def test_c36() -> None:
     
     # Client's Session Key 'K'
     K_C = client_c36()
-    print(K_C)
     
     # Server's Session Key 'K'
     K_S = get(server_address).json().get("K")
