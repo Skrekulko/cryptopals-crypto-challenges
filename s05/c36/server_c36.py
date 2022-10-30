@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 #
-#   36 - Implement DH with negotiated groups, and break with malicious "g" parameters
+#   36 - Implement Secure Remote Password (SRP)
 #
 
 from flask import Flask, request, jsonify, json

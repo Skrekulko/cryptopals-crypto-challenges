@@ -1,5 +1,5 @@
 #
-#   36 - Implement DH with negotiated groups, and break with malicious "g" parameters
+#   36 - Implement Secure Remote Password (SRP)
 #
 
 from requests import get
