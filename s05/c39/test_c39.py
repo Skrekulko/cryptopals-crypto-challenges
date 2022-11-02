@@ -15,7 +15,7 @@ def test_c39() -> None:
     plaintext = b"Hello!"
     
     # RSA
-    rsa = RSA(key_length)
+    rsa = RSA(key_length, e)
 
     assert rsa.decrypt(
         c39(key_length, e, plaintext)
