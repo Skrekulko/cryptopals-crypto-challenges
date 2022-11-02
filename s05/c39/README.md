@@ -1,4 +1,4 @@
-#### Implement RSA
+### Implement RSA
 
 There are two annoying things about implementing RSA. Both of them involve key generation; the actual encryption/decryption in RSA is trivial.
 
