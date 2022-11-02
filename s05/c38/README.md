@@ -41,3 +41,7 @@ Make sure the protocol works given a valid password.
 Now, run the protocol as a MITM attacker: pose as the server and use arbitrary values for b, B, u, and salt.
 
 Crack the password from A's HMAC-SHA256(K, salt).
+
+### Notes
+
+Since this is the implementation of the SRP-6a version, the attack mentioned above is not viable due to the security enhancements. Thus, a simulation of a leak of the password verifier *v* from the server is being done here.
