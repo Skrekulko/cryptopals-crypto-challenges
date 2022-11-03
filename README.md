@@ -190,14 +190,14 @@ timeout = 60
     </ol>
     <li><b>Set 5: Diffie-Hellman and friends</b></li>
     <ol type="1" start="33">
-        <li>Implement Diffie-Hellman :x:</li>
-        <li>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :x:</li>
-        <li>Implement DH with negotiated groups, and break with malicious "g" parameters :x:</li>
-        <li>Implement Secure Remote Password (SRP) :x:</li>
-        <li>Break SRP with a zero key :x:</li>
-        <li>Offline dictionary attack on simplified SRP :x:</li>
-        <li>Implement RSA :x:</li>
-        <li>Implement an E=3 RSA Broadcast attack :x:</li>
+        <li>Implement Diffie-Hellman :heavy_check_mark:</li>
+        <li>Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection :heavy_check_mark:</li>
+        <li>Implement DH with negotiated groups, and break with malicious "g" parameters :heavy_check_mark:</li>
+        <li>Implement Secure Remote Password (SRP) :heavy_check_mark:</li>
+        <li>Break SRP with a zero key :heavy_check_mark:</li>
+        <li>Offline dictionary attack on simplified SRP :heavy_check_mark:</li>
+        <li>Implement RSA :heavy_check_mark:</li>
+        <li>Implement an E=3 RSA Broadcast attack :heavy_check_mark:</li>
     </ol>
     <li><b>Set 6: RSA and DSA</b></li>
     <ol type="1" start="41">
