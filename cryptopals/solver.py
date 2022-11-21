@@ -4,11 +4,11 @@ from collections import Counter
 from itertools import count
 from collections import defaultdict
 from cryptopals.xor import XOR
-from cryptopals.utils import Blocks
+from cryptopals.utils import Blocks, Generator
 from cryptopals.oracle import Oracle, HashOracle
 from cryptopals.utils import Converter
 from cryptopals.pkcs import PKCS7
-from cryptopals.generator import Generator, MT19937, StaticMT19937
+from cryptopals.rng import MT19937, StaticMT19937
 from cryptopals.hash import SHA1, MD4
 
 
@@ -834,10 +834,10 @@ class Cloner:
         u, d = 11, 0xffffffff
         s, b = 7, 0x9d2c5680
         t, c = 15, 0xefc60000
-        l = 18
+        L = 18
 
         # Untemper
-        y ^= y >> l
+        y ^= y >> L
         y ^= y << t & c
         for _ in range(s):
             y ^= y << s & b
