@@ -1,5 +1,7 @@
-from math import ceil
 import codecs
+from math import ceil
+from os import urandom
+from random import randint, getrandbits
 
 
 def load_lines(file_name: str) -> list[bytes]:
@@ -89,3 +91,21 @@ class Math:
             t = t + n
 
         return t
+
+
+class Generator:
+    @staticmethod
+    def random_bytes(min_value=1, max_value=16) -> bytes:
+        return urandom(randint(min_value, max_value))
+
+    @staticmethod
+    def key_128b() -> bytes:
+        return urandom(16)
+
+    @staticmethod
+    def true_or_false() -> bool:
+        return bool(getrandbits(1))
+
+    @staticmethod
+    def random_int(min_int=1, max_int=(1 << 16) - 1) -> int:
+        return randint(min_int, max_int)
