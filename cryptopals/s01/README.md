@@ -14,3 +14,32 @@ If you've written any crypto code in the past, you're going to feel like skippin
 6. Break repeating-key XOR
 7. AES in ECB mode
 8. Detect AES in ECB mode
+
+### Write-Up
+
+The *codecs* package for Python is used to encode/decode, and *rstrip* is used to get rid of any end characters.
+
+First, the hex string
+
+```
+49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d
+```
+
+is decoded into an ASCII string,
+
+```
+I'm killing your brain like a poisonous mushroom
+```
+
+which is then finally encoded into a Base64 string.
+
+```
+SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t
+```
+
+
+### References
+
+[1] [codecs](https://docs.python.org/3/library/codecs.html)
+
+[2] [rstrip](https://docs.python.org/3/library/stdtypes.html)
