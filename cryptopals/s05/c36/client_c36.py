@@ -5,7 +5,7 @@
 #
 
 from requests import post
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.utils import Math
 from cryptopals.hash import SHA1
 

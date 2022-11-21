@@ -2,7 +2,7 @@
 #   11 - An ECB/CBC detection oracle
 #
 
-from cryptopals.Solver import Detector
+from cryptopals.solver import Detector
 from cryptopals.s02.c11.solution_c11 import MyOracle
 
 

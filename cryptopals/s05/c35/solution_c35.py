@@ -5,7 +5,7 @@
 from cryptopals.asymmetric import DiffieHellman
 from cryptopals.hash import SHA1
 from cryptopals.symmetric import AES128CBC
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.converter import Converter
 
 

@@ -2,8 +2,8 @@
 #   29 - Break a SHA-1 keyed MAC using length extension
 #
 
-from cryptopals.Oracle import HashOracle
-from cryptopals.Generator import Generator
+from cryptopals.oracle import HashOracle
+from cryptopals.generator import Generator
 from cryptopals.hash import SHA1
 
 

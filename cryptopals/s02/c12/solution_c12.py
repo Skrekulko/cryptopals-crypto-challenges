@@ -3,11 +3,11 @@
 #
 
 from itertools import count
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.symmetric import AES128ECB
 from cryptopals.converter import Converter
-from cryptopals.Oracle import Oracle
-from cryptopals.PKCS import PKCS7
+from cryptopals.oracle import Oracle
+from cryptopals.pkcs import PKCS7
 
 
 class MyOracle(Oracle):

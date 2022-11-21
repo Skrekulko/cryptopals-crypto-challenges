@@ -5,7 +5,7 @@
 #
 
 from flask import Flask, request, jsonify, json
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.converter import Converter
 from cryptopals.hash import SHA1
 from cryptopals.utils import Math

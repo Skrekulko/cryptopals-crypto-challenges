@@ -1,7 +1,7 @@
 from Crypto.Util.number import getPrime
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.utils import Math
-from cryptopals.converter import Converter
+from cryptopals.utils import Converter
 
 
 class DiffieHellman:

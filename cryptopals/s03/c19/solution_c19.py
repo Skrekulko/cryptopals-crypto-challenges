@@ -2,8 +2,8 @@
 #   19 - Break fixed-nonce CTR mode using substitutions
 #
 
-from cryptopals.Solver import Decipher
-from cryptopals.XOR import XOR
+from cryptopals.solver import Decipher
+from cryptopals.xor import XOR
 
 
 class MyDecipher(Decipher):

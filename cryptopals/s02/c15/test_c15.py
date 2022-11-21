@@ -3,7 +3,7 @@
 #
 
 import pytest
-from cryptopals.PKCS import PKCS7
+from cryptopals.pkcs import PKCS7
 
 
 def test_c15() -> None:

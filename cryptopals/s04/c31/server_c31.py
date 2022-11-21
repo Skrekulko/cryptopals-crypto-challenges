@@ -7,8 +7,8 @@
 from flask import Flask, request
 from time import sleep
 from cryptopals.hash import SHA1
-from cryptopals.XOR import XOR
-from cryptopals.Generator import Generator
+from cryptopals.xor import XOR
+from cryptopals.generator import Generator
 
 
 class MySHA1(SHA1):

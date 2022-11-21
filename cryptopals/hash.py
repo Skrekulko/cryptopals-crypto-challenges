@@ -1,5 +1,5 @@
 import struct
-from cryptopals.XOR import XOR
+from cryptopals.xor import XOR
 
 
 class SHA1:

@@ -4,11 +4,11 @@
 
 import random
 
-from cryptopals.Oracle import Oracle
-from cryptopals.Generator import Generator
+from cryptopals.oracle import Oracle
+from cryptopals.generator import Generator
 from cryptopals.symmetric import AES128CBC
-from cryptopals.XOR import XOR
-from cryptopals.PKCS import PKCS7
+from cryptopals.xor import XOR
+from cryptopals.pkcs import PKCS7
 
 
 class MyOracle(Oracle):

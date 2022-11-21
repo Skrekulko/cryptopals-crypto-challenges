@@ -4,7 +4,7 @@
 
 from cryptopals.s04.c25.solution_c25 import Decipher
 from cryptopals.converter import Converter
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.symmetric import AES128CTR
 
 

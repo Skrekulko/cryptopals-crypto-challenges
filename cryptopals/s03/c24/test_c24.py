@@ -4,7 +4,7 @@
 
 from cryptopals.s03.c24.solution_c24 import StaticMT19937, Decipher, mt19937_validate, generate_token
 from random import randint
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 
 
 def test_c24() -> None:

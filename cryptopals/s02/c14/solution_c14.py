@@ -2,12 +2,12 @@
 #   14 - Byte-at-a-time ECB decryption (Harder)
 #
 
-from cryptopals.Oracle import Oracle
-from cryptopals.Generator import Generator
+from cryptopals.oracle import Oracle
+from cryptopals.generator import Generator
 from cryptopals.symmetric import AES128ECB
-from cryptopals.Solver import Detector
+from cryptopals.solver import Detector
 from cryptopals.converter import Converter
-from cryptopals.PKCS import PKCS7
+from cryptopals.pkcs import PKCS7
 
 
 class MyOracle(Oracle):

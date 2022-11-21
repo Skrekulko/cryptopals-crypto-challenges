@@ -3,8 +3,8 @@
 #
 
 import codecs
-from cryptopals.XOR import XOR
-from cryptopals.Solver import Frequency
+from cryptopals.xor import XOR
+from cryptopals.solver import Frequency
 
 
 class Converter:

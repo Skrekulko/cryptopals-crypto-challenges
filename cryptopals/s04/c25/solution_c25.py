@@ -3,7 +3,7 @@
 #
 
 from cryptopals.symmetric import AES128CTR
-from cryptopals.XOR import XOR
+from cryptopals.xor import XOR
 
 
 def edit(ciphertext: bytes, key: bytes, nonce: int, offset: int, my_plaintext: bytes) -> bytes:

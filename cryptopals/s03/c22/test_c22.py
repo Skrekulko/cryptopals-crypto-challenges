@@ -5,7 +5,7 @@
 from cryptopals.s03.c22.solution_c22 import Decipher
 from time import time
 from random import randint
-from cryptopals.Generator import MT19937
+from cryptopals.generator import MT19937
 
 
 def test_c22() -> None:

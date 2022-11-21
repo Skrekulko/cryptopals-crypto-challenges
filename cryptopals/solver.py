@@ -3,12 +3,12 @@ from statistics import median
 from collections import Counter
 from itertools import count
 from collections import defaultdict
-from cryptopals.XOR import XOR
+from cryptopals.xor import XOR
 from cryptopals.utils import Blocks
-from cryptopals.Oracle import Oracle, HashOracle
-from cryptopals.converter import Converter
-from cryptopals.PKCS import PKCS7
-from cryptopals.Generator import Generator, MT19937, StaticMT19937
+from cryptopals.oracle import Oracle, HashOracle
+from cryptopals.utils import Converter
+from cryptopals.pkcs import PKCS7
+from cryptopals.generator import Generator, MT19937, StaticMT19937
 from cryptopals.hash import SHA1, MD4
 
 

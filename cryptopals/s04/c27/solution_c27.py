@@ -2,12 +2,12 @@
 #   27 - Recover the key from CBC with IV=Key
 #
 
-from cryptopals.Oracle import Oracle
-from cryptopals.Generator import Generator
-from cryptopals.PKCS import PKCS7
+from cryptopals.oracle import Oracle
+from cryptopals.generator import Generator
+from cryptopals.pkcs import PKCS7
 from cryptopals.symmetric import AES128CBC
-from cryptopals.Solver import Detector
-from cryptopals.XOR import XOR
+from cryptopals.solver import Detector
+from cryptopals.xor import XOR
 
 
 class MyOracle(Oracle):

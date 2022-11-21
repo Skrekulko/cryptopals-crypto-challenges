@@ -2,7 +2,7 @@
 #   04 - Detect single-character XOR
 #
 
-from cryptopals.Solver import Decipher
+from cryptopals.solver import Decipher
 
 
 def load_lines(file_name: str) -> list[bytes]:

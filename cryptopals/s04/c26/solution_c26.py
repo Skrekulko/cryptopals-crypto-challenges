@@ -2,10 +2,10 @@
 #   26 - CTR bitflipping
 #
 
-from cryptopals.Oracle import Oracle
-from cryptopals.Generator import Generator
+from cryptopals.oracle import Oracle
+from cryptopals.generator import Generator
 from cryptopals.symmetric import AES128CTR
-from cryptopals.XOR import XOR
+from cryptopals.xor import XOR
 
 
 class MyOracle(Oracle):

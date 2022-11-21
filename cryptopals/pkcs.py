@@ -1,4 +1,4 @@
-from cryptopals.converter import Converter
+from cryptopals.utils import Converter
 
 
 class PKCS7:

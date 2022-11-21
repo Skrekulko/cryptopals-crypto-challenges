@@ -3,8 +3,8 @@
 #
 
 import struct
-from cryptopals.Oracle import HashOracle
-from cryptopals.Generator import Generator
+from cryptopals.oracle import HashOracle
+from cryptopals.generator import Generator
 
 
 class MyOracle(HashOracle):

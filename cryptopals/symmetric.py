@@ -1,6 +1,6 @@
 from Crypto.Cipher import AES
-from cryptopals.PKCS import PKCS7
-from cryptopals.XOR import XOR
+from cryptopals.pkcs import PKCS7
+from cryptopals.xor import XOR
 from cryptopals.utils import Blocks
 
 

@@ -5,7 +5,7 @@
 from os import urandom
 from random import randint, getrandbits
 from cryptopals.symmetric import AES128ECB, AES128CBC
-from cryptopals.Oracle import Oracle
+from cryptopals.oracle import Oracle
 
 
 class Generator:

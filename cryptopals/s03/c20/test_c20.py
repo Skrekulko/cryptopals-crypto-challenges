@@ -3,10 +3,10 @@
 #
 
 from difflib import SequenceMatcher
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 from cryptopals.converter import Converter
 from cryptopals.symmetric import AES128CTR
-from cryptopals.Solver import Decipher
+from cryptopals.solver import Decipher
 
 
 def test_c20() -> None:

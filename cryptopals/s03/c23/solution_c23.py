@@ -2,7 +2,7 @@
 #   23 - Clone an MT19937 RNG from its output
 #
 
-from cryptopals.Generator import MT19937
+from cryptopals.generator import MT19937
 
 
 class Cloner:

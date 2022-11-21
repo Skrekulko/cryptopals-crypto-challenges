@@ -3,7 +3,7 @@
 #
 
 from cryptopals.utils import Blocks
-from cryptopals.XOR import XOR
+from cryptopals.xor import XOR
 from cryptopals.symmetric import AES128ECB
 
 

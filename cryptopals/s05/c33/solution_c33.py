@@ -2,7 +2,7 @@
 #   33 - Implement Diffie-Hellman
 #
 
-from cryptopals.Generator import Generator
+from cryptopals.generator import Generator
 
 
 class Math:
