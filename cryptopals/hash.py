@@ -226,26 +226,26 @@ class MD4:
             # Round 1
             Xi = [3, 7, 11, 19]
             for n in range(MD4.NO_OPS):
-                i, j, k, l = map(lambda x: x % 4, range(-n, -n + 4))
+                i, j, k, L = map(lambda x: x % 4, range(-n, -n + 4))
                 K, S = n, Xi[n % 4]
-                hn = h[i] + MD4.f_function(h[j], h[k], h[l]) + X[K]
+                hn = h[i] + MD4.f_function(h[j], h[k], h[L]) + X[K]
                 h[i] = MD4.lrot(hn & MD4.MASK, S)
 
             # Round 2
             Xi = [3, 5, 9, 13]
             for n in range(MD4.NO_OPS):
-                i, j, k, l = map(lambda x: x % 4, range(-n, -n + 4))
+                i, j, k, L = map(lambda x: x % 4, range(-n, -n + 4))
                 K, S = n % 4 * 4 + n // 4, Xi[n % 4]
-                hn = h[i] + MD4.g_function(h[j], h[k], h[l]) + X[K] + 0x5A827999
+                hn = h[i] + MD4.g_function(h[j], h[k], h[L]) + X[K] + 0x5A827999
                 h[i] = MD4.lrot(hn & MD4.MASK, S)
 
             # Round 3
             Xi = [3, 9, 11, 15]
             Ki = [0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15]
             for n in range(MD4.NO_OPS):
-                i, j, k, l = map(lambda x: x % 4, range(-n, -n + 4))
+                i, j, k, L = map(lambda x: x % 4, range(-n, -n + 4))
                 K, S = Ki[n], Xi[n % 4]
-                hn = h[i] + MD4.h_function(h[j], h[k], h[l]) + X[K] + 0x6ED9EBA1
+                hn = h[i] + MD4.h_function(h[j], h[k], h[L]) + X[K] + 0x6ED9EBA1
                 h[i] = MD4.lrot(hn & MD4.MASK, S)
 
             h = [((v + n) & MD4.MASK) for v, n in zip(h, h)]
