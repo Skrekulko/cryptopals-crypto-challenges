@@ -2,7 +2,7 @@
 #   01 - Convert hex to base64
 #
 
-from cryptopals.s01.c01.solution_c01 import Converter
+from cryptopals.s01.c01.solution_c01 import hex_to_base64
 
 
 def test_c01() -> None:
@@ -12,4 +12,4 @@ def test_c01() -> None:
     # Valid Result
     result = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
     
-    assert Converter.hex_to_base64(string) == result
+    assert hex_to_base64(string) == result
