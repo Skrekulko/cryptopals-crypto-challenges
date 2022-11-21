@@ -2,7 +2,7 @@
 #   22 - Crack an MT19937 seed
 #
 
-from cryptopals.generator import MT19937
+from cryptopals.rng import MT19937
 
 
 class Decipher:

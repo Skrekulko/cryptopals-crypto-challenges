@@ -4,7 +4,7 @@
 
 import struct
 from cryptopals.oracle import HashOracle
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 
 
 class MyOracle(HashOracle):

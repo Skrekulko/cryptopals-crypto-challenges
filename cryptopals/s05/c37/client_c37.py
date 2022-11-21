@@ -6,9 +6,8 @@
 
 from requests import post
 from cryptopals.converter import Converter
-from cryptopals.utils import Math
+from cryptopals.utils import Math, Generator
 from cryptopals.hash import SHA1
-from cryptopals.generator import Generator
 
 # SRP Address
 srp_address = "http://127.0.0.1:8082/"

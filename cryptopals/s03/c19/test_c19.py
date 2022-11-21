@@ -4,7 +4,7 @@
 
 from cryptopals.s03.c19.solution_c19 import MyDecipher
 from difflib import SequenceMatcher
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.converter import Converter
 from cryptopals.symmetric import AES128CTR
 

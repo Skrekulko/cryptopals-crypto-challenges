@@ -3,7 +3,7 @@
 #
 
 from difflib import SequenceMatcher
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.converter import Converter
 from cryptopals.symmetric import AES128CTR
 from cryptopals.solver import Decipher

@@ -3,7 +3,7 @@
 #
 
 from cryptopals.oracle import Oracle
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.symmetric import AES128CTR
 from cryptopals.xor import XOR
 

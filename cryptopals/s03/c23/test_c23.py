@@ -3,7 +3,7 @@
 #
 
 from cryptopals.s03.c23.solution_c23 import Cloner
-from cryptopals.generator import MT19937
+from cryptopals.rng import MT19937
 
 
 def test_c23() -> None:

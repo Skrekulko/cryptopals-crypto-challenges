@@ -3,7 +3,7 @@
 #
 
 from itertools import count
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.symmetric import AES128ECB
 from cryptopals.converter import Converter
 from cryptopals.oracle import Oracle

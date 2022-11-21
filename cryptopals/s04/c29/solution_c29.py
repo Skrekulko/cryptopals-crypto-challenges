@@ -3,7 +3,7 @@
 #
 
 from cryptopals.oracle import HashOracle
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.hash import SHA1
 
 

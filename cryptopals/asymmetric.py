@@ -1,6 +1,5 @@
 from Crypto.Util.number import getPrime
-from cryptopals.generator import Generator
-from cryptopals.utils import Math
+from cryptopals.utils import Math, Generator
 from cryptopals.utils import Converter
 
 

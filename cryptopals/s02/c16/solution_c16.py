@@ -4,12 +4,11 @@
 
 from itertools import count
 from cryptopals.oracle import Oracle
-from cryptopals.generator import Generator
 from cryptopals.pkcs import PKCS7
 from cryptopals.symmetric import AES128CBC
 from cryptopals.solver import Detector
 from cryptopals.xor import XOR
-from cryptopals.utils import Blocks
+from cryptopals.utils import Blocks, Generator
 
 
 class MyOracle(Oracle):

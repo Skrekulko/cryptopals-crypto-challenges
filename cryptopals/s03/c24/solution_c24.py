@@ -3,7 +3,7 @@
 #
 
 from time import time
-from cryptopals.generator import MT19937
+from cryptopals.rng import MT19937
 
 
 class StaticMT19937:

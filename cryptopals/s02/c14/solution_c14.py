@@ -3,7 +3,7 @@
 #
 
 from cryptopals.oracle import Oracle
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.symmetric import AES128ECB
 from cryptopals.solver import Detector
 from cryptopals.converter import Converter

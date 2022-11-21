@@ -5,7 +5,7 @@
 import random
 
 from cryptopals.oracle import Oracle
-from cryptopals.generator import Generator
+from cryptopals.utils import Generator
 from cryptopals.symmetric import AES128CBC
 from cryptopals.xor import XOR
 from cryptopals.pkcs import PKCS7
