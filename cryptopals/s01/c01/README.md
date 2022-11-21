@@ -19,7 +19,7 @@ So go ahead and make that happen. You'll need to use this code for the rest of t
 
 ### Write-Up
 
-The *codecs* package for Python is used to encode/decode, and *rstrip* is used to get rid of any end characters.
+The *codecs* package is used to encode/decode, and *rstrip* is used to get rid of any end characters.
 
 First, the hex string
 
