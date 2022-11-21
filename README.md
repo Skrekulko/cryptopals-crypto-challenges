@@ -11,27 +11,32 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
+### Release Schedule
+
+- **January 2023** -> Set 6: RSA and DSA
+- **February 2023** -> Set 7: Hashes
+- **March 2023** -> Set 8: Abstract Algebra
+- **TBD** -> Write-Ups
+
 ## Structure Of This Project
 
     .
-    ├── s01                     # Set 1 - Basics
-    │   ├── c01                 # Challenge 1 - Convert hex to base64
-    │   |   ├── README.md       # README for challenge 1
-    │   |   ├── c01.py          # Solution for challenge 1
-    |   |   └── test_c01.py     # Test for challenge 1 solution
-    |   ├── ...
-    |   ├── c04                 # Challenge 4 - Detect single-character XOR
-    │   |   ├── ...
-    │   |   ├── helper_c04.py   # Previous (refactored) code used for current solution
-    │   |   └── ...
-    |   └── ...
-    ├── s02                     # Set 2 - Block crypto
-    |   └── ...
+    ├── cryptopals
+    │   ├── s01
+    │   │   ├── c01                     
+    │   │   │   ├── README.md
+    │   │   │   ├── solution_c01.py
+    │   │   │   └── test_c01.py
+    │   │   └── ...
+    │   ├── s02
+    │   ├── ...
+    │   ├── utils.py
+    │   └── ...
     ├── ...
     ├── .gitignore
     ├── LICENSE
-    ├── README.md
     ├── pyproject.toml
+    ├── README.md
     └── requirements.txt
 
 ### Sets
@@ -40,64 +45,73 @@ Each set of challenges has it's corresponding folder with the according number, 
 
 ### Challenges
 
-Every challenge has it's corresponding folder with the according number, e.g. the *Challenge 1 - Convert hex to base64* has it's own folder **c01**.
+Every challenge has it's corresponding folder with the according number, e.g. the *Challenge 1 - Convert hex to base64* has its own folder **c01**.
 
 #### Solution
 
-The solution for the particular challenge must be included within the corresponding function that returns the result (solution), e.g. solution for *Challenge 1 - Convert hex to base64* must return the result (solution) from the **c01()** function. Any "helper" code can be written outside of the corresponding function as long as it returns the result for futher testing. The solution is available in a python file named after the folder name, e.g. solution for *Challenge 1 - Convert hex to base64* is in **c01.py**.
+The solution for the particular challenge has a "**solution\_**" prefix added to it, e.g. solution for *Challenge 1* is in module **solution\_c01.py**.
 
 ```python
 #
 #   01 - Convert hex to base64
 #
 
-def helper_function(input):
-    ...
+import codecs
 
-def c01(input):
-    ...
 
-    return solution
+def hex_to_base64(hex_bytes: bytes) -> bytes:
+    return codecs.encode(codecs.decode(hex_bytes, "hex"), "base64").rstrip()
 ```
 
 #### Test
 
-Test for the solution has a *"test\_"* prefix added to it, e.g. test for solution *c01.py* is in **test\_c01.py**. The test is always calling the corresponding method for the solution, e.g. *test\_c01()* must call **c01()**:
+Test for the solution has a "**test\_**" prefix added to it, e.g. test for solution of *Challenge 1* is in **test\_c01** module.
 
 ```python
 #
 #   01 - Convert hex to base64
 #
 
-from c01 import c01
+from cryptopals.s01.c01.solution_c01 import hex_to_base64
+
 
 def test_c01() -> None:
-    input = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    # Input String
+    string = b"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    
+    # Valid Result
     result = b"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
     
-    assert c01(input) == result
+    assert hex_to_base64(string) == result
 ```
 
-(The result is visible on the cryptopals site, so no spoiler here.)
+#### Refactored Solutions
 
-#### Helper
+Every solution/code that proves useful is refactored and moved to a different module, that'll be used in the future challenges. For e.g., the solution for *Challenge 1*, is going to be refactored into a *Converter* class in the module **utils**:
 
-Helper contains (refactored) code from previous solutions that is used for the current challenge. It has a *"helper\_"* prefix added to it, e.g. helper for solution *c04.py* is in **helper\_c04.py**.
+```python
+# utils.py
+
+class Converter:
+    @staticmethod
+    def hex_to_base64(hex_bytes: bytes) -> bytes:
+        return codecs.encode(codecs.decode(hex_bytes, "hex"), "base64")
+```
 
 ## How To Run
 
 ### Virtual Environment
 
-Python virtual environment is recommended for running these challenges, with a small guide on how to set it up here:
+Python virtual environment is being used for running these challenges, with a small guide on how to set it up here:
 
 #### Installation And Activation
 
 ```shell
 # Install virtualenv If Not Already Installed
-$ pip3 install virtualenv
+$ pip install virtualenv
 
 # Create The Virtual Environment
-$ python3 -m virtualenv -p python3 venv
+$ virtualenv -p python3 venv
 
 # Activate The Virtual Environment
 $ source venv/bin/activate
@@ -116,7 +130,7 @@ The dependencies must be installed for everything to work properly by running th
 
 ```python
 # Install The Dependencies For The Virtual Environment
-(venv) $ python3 -m pip install -r requirements.txt
+(venv) $ pip install -r requirements.txt
 ```
 
 ### Tests
