@@ -12,9 +12,9 @@ def load_lines(file_name: str) -> list[bytes]:
 
 class Detector:
     @staticmethod
-    def single_character_xor(ciphers: list) -> tuple[bytes, int, float]:
-        # Decipher Every Encrypted Line And Put Them Together
-        deciphered = [Decipher.single_byte_xor(cipher) for cipher in ciphers]
+    def single_character_xor(ciphertexts: list) -> tuple[bytes, int, float]:
+        # Decipher Every Ciphertext Line
+        plaintext = [Decipher.single_byte_xor(ciphertext) for ciphertext in ciphertexts]
 
-        # Return The Deciphered Data And The Secret Key
-        return min(deciphered, key=lambda t: t[2])
+        # Return The Plaintext Line And The Secret Key
+        return min(plaintext, key=lambda t: t[2])
