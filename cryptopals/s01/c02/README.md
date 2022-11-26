@@ -52,12 +52,12 @@ Finally, the result needs to be converted back into a *bytes* object:
 bytes(a ^ b for (a, b) in zip(byte_string1, byte_string2))
 ```
 
-[^1]: [fromhex](https://docs.python.org/3/library/stdtypes.html)
+[^1]: [fromhex](https://docs.python.org/3/library/stdtypes.html#bytes.fromhex)
 
-[^2]: [bytes](https://docs.python.org/3/library/stdtypes.html)
+[^2]: [bytes](https://docs.python.org/3/library/stdtypes.html#bytes-objects)
 
 [^3]: [XOR](https://en.wikipedia.org/wiki/Exclusive_or)
 
-[^4]: [Bitwise Exclusive Or](https://docs.python.org/3/library/operator.html)
+[^4]: [Bitwise Exclusive Or](https://docs.python.org/3/library/operator.html#mapping-operators-to-functions)
 
 [^5]: [zip](https://docs.python.org/3/library/functions.html#zip)
