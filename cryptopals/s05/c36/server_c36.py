@@ -5,9 +5,8 @@
 #
 
 from flask import Flask, request, jsonify, json
-from cryptopals.converter import Converter
 from cryptopals.hash import SHA1
-from cryptopals.utils import Math, Generator
+from cryptopals.utils import Math, Generator, Converter
 
 global N, g, username, password
 global s, A, B, K, v, u, b, S
