@@ -50,7 +50,7 @@ class Blocks:
 
 class Math:
     @staticmethod
-    # Modular Exponentiation 'a^b mod m'
+    # Modular Exponentiation 'b^e mod m'
     def mod_pow(b: int, e: int, m: int) -> int:
         x = 1
 
