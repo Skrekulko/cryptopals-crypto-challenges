@@ -3,7 +3,7 @@
 #
 
 from Crypto.Util.number import getPrime
-from cryptopals.converter import Converter
+from cryptopals.utils import Converter
 
 
 class Math:

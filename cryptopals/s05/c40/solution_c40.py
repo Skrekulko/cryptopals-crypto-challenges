@@ -3,8 +3,7 @@
 #
 
 from functools import reduce
-from cryptopals.utils import Math
-from cryptopals.converter import Converter
+from cryptopals.utils import Math, Converter
 
 
 class MyMath(Math):

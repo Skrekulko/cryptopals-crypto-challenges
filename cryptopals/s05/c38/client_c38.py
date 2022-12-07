@@ -5,8 +5,7 @@
 #
 
 from requests import post, get
-from cryptopals.converter import Converter
-from cryptopals.utils import Math, Generator
+from cryptopals.utils import Math, Generator, Converter
 from cryptopals.hash import SHA1
 
 # SRP Address
