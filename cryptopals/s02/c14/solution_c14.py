@@ -3,10 +3,9 @@
 #
 
 from cryptopals.oracle import Oracle
-from cryptopals.utils import Generator
+from cryptopals.utils import Generator, Converter
 from cryptopals.symmetric import AES128ECB
 from cryptopals.solver import Detector
-from cryptopals.converter import Converter
 from cryptopals.pkcs import PKCS7
 
 
@@ -20,8 +19,8 @@ class MyOracle(Oracle):
     def encrypt(self, data=b"") -> bytes:
         return AES128ECB.encrypt(self.prefix + data + self.target, self.key)
         
-    def decrypt(self, encrypted_data) -> bytes:
-        return AES128ECB.decrypt(encrypted_data, self.key)
+    def decrypt(self, ciphertext=b"", key=b"", iv=b"") -> bytes:
+        return AES128ECB.decrypt(ciphertext, self.key)
 
 
 class Decipher:
