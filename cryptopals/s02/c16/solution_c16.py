@@ -36,9 +36,12 @@ class MyOracle(Oracle):
     
     def encrypt(self, plaintext=b"") -> bytes:
         return AES128CBC.encrypt(MyOracle.parse_input(plaintext), self.key, self.iv)
-        
+
+    def decrypt(self, ciphertext=b"", key=b"", iv=b"") -> bytes:
+        return AES128CBC.decrypt(ciphertext, self.key, self.iv)
+
     def decrypt_and_check_admin(self, ciphertext: bytes) -> bool:
-        plaintext = AES128CBC.decrypt(ciphertext, self.key, self.iv)
+        plaintext = self.decrypt(ciphertext, self.key, self.iv)
         print(Blocks.split_into_blocks(plaintext, 16))
         is_admin = MyOracle.is_admin(plaintext)
         
