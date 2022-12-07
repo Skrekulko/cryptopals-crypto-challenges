@@ -2,7 +2,7 @@
 #   09 - Implement PKCS#7 padding
 #
 
-from cryptopals.converter import Converter
+from cryptopals.utils import Converter
 
 
 class PKCS7:
