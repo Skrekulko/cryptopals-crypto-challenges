@@ -41,7 +41,7 @@ Implement that attack.
 #### Careful about division in cyclic groups.
 
 > Remember: you don't simply divide mod N; you multiply by the multiplicative inverse mod N. So you'll need a modinv() function.
-> 
+
 ## Explanation
 
 As we know, the RSA ciphertext $c$ and message $m$ have this form:
