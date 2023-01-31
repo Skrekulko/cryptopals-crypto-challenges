@@ -1,4 +1,4 @@
-from Crypto.Util.number import getPrime
+from Crypto.PublicKey import RSA as CryptoRSA
 from cryptopals.utils import Math, Generator
 from cryptopals.utils import Converter
 
@@ -52,29 +52,32 @@ class DiffieHellman:
 
 
 class RSA:
-    def __init__(self, key_len: int, e=3):
-        # Public Exponent 'e'
-        self.e = e
+    def __init__(self, bits: int, e=65537):
+        # Generate RSA Parameters
+        self.parameters = CryptoRSA.generate(bits=bits, e=e)
 
-        phi = 0
-        while Math.gcd(self.e, phi) != 1:
-            # Secret Primes 'p' And 'q' (q < p)
-            p, q = getPrime(key_len // 2), getPrime(key_len // 2)
-
-            phi = Math.lcm(p - 1, q - 1)
-
-            # Public Modulus 'n'
-            self.n = p * q
-
-        # Secret Exponent 'd'
-        self._d = Math.mod_inv(self.e, phi)
+        # # Public Exponent 'e'
+        # self.e = e
+        #
+        # phi = 0
+        # while Math.gcd(self.e, phi) != 1:
+        #     # Secret Primes 'p' And 'q' (q < p)
+        #     p, q = getPrime(key_len // 2), getPrime(key_len // 2)
+        #
+        #     phi = Math.lcm(p - 1, q - 1)
+        #
+        #     # Public Modulus 'n'
+        #     self.n = p * q
+        #
+        # # Secret Exponent 'd'
+        # self._d = Math.mod_inv(self.e, phi)
 
     def encrypt(self, plaintext: bytes) -> bytes:
         return Converter.int_to_hex(
             pow(
                 int.from_bytes(plaintext, "big"),
-                self.e,
-                self.n
+                self.parameters.e,
+                self.parameters.n
             )
         )
 
@@ -82,7 +85,7 @@ class RSA:
         return Converter.int_to_hex(
             pow(
                 int.from_bytes(ciphertext, "big"),
-                self._d,
-                self.n
+                self.parameters.d,
+                self.parameters.n
             )
         )
