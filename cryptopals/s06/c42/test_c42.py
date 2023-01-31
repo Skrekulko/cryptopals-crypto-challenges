@@ -10,9 +10,9 @@ def test_c42() -> None:
     oracle = MyOracle()
 
     # Plaintext
-    plaintext = b"hi mom"
+    plaintext = b"\x00\x00\x2e\x36"
 
     # Forged Signature
-    forged_signature = bleichenbacher_signature(key_size=oracle.key_length, data=plaintext)
+    forged_signature = bleichenbacher_signature(n_size=oracle.key_length, e=oracle.e, data=plaintext)
 
     assert oracle.verify(signature=forged_signature, data=plaintext)

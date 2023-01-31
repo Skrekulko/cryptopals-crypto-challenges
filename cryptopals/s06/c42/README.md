@@ -76,7 +76,19 @@ In the implementation level, a part of the format check is sometimes inadequate 
 ```math
 \textrm{$00||01||PS||00||T||H^{'}||$garbage}
 ```
-(a garbage data is followed) is obtained by a verifier as a decoded message, it should be rejected because it is in the illegal format. However, some implementations accept the string because they do not properly check the number of $ff$ (only check $|PS|\geq 64$) and they stop the scan at the end of $H^{'} (namely, they do not notice the existence of the garbage). Such loose implementation is the target of *Bleichenbacher's forgery attack*. For more information on this topic, check out these two great papers ([first](https://ieeexplore.ieee.org/document/4159923) and [second](https://www.jstage.jst.go.jp/article/ipsjjip/16/0/16_0_122/_article)) and this one [article](https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE/).
+(a garbage data is followed) is obtained by a verifier as a decoded message, it should be rejected because it is in the illegal format. However, some implementations accept the string because they do not properly check the number of $ff$ (only check $|PS|\geq 64$) and they stop the scan at the end of $H^{'}$ (namely, they do not notice the existence of the garbage). Such loose implementation is the target of *Bleichenbacher's forgery attack*. For more information on this topic, check out these two great papers ([first](https://ieeexplore.ieee.org/document/4159923) and [second](https://www.jstage.jst.go.jp/article/ipsjjip/16/0/16_0_122/_article) and this one [article](https://mailarchive.ietf.org/arch/msg/openpgp/5rnE9ZRN1AokBVj3VqblGlP63QE/).
+
+The implementation used a slightly modified version of the extended Bleichenbacher's Attack (which works only for $|n|\geq 369$, $|n|$ being the size of the public modulus $n$ in bits) described in the [second](https://www.jstage.jst.go.jp/article/ipsjjip/16/0/16_0_122/_article) paper.
+
+First, a function $f$ of $\bar{m}$ is constructed:
+
+```math
+f=(2^{192}-2^{128}+T)\cdot 2^{|n|-208}+H(\bar{m})\cdot 2^{|n|-368}
+```
+
+where $H(\bar{m})$ is the hash value of message $\bar{m}$ by SHA-1, and $T$ being the identified mentioned before. Next, the computed function $f$ is converted into *bytes*, and we append $00||01$ to it. After appending these bytes, we convert this new octet hex string back into an integer and we compute it's e-th root $\sqrt[e]{f}$ as a real number and its ceiling $\left \lceil \sqrt[e]{f} \right \rceil$.
+
+This final value is our forged signature for the corresponding message $\bar{m}$.
 
 
 
