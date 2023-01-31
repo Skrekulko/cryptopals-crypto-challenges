@@ -1,6 +1,4 @@
-## Crypto Challenge Set 6 - 41. Implement unpadded message recovery oracle
-
-### Implement unpadded message recovery oracle
+## Implement unpadded message recovery oracle
 
 Nate Lawson says we should stop calling it "RSA padding" and start calling it "RSA armoring". Here's why.
 
