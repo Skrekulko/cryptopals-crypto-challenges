@@ -56,22 +56,6 @@ class RSA:
         # Generate RSA Parameters
         self.parameters = CryptoRSA.generate(bits=bits, e=e)
 
-        # # Public Exponent 'e'
-        # self.e = e
-        #
-        # phi = 0
-        # while Math.gcd(self.e, phi) != 1:
-        #     # Secret Primes 'p' And 'q' (q < p)
-        #     p, q = getPrime(key_len // 2), getPrime(key_len // 2)
-        #
-        #     phi = Math.lcm(p - 1, q - 1)
-        #
-        #     # Public Modulus 'n'
-        #     self.n = p * q
-        #
-        # # Secret Exponent 'd'
-        # self._d = Math.mod_inv(self.e, phi)
-
     def encrypt(self, plaintext: bytes) -> bytes:
         return Converter.int_to_hex(
             pow(
