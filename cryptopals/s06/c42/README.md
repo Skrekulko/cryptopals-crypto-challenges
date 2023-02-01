@@ -32,7 +32,7 @@ There are two ways to approach this problem:
 
 Forge a 1024-bit RSA signature for the string "hi mom". Make sure your implementation actually accepts the signature!
 
-## Explanation
+## Write-up
 
 The signature scheme *RSASSA-PKCS1-v1_5* defined in [PKCS# Version 2.1](https://www.rfc-editor.org/rfc/rfc3447) is described as follows:
 
