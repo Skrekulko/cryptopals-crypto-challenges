@@ -79,6 +79,92 @@ Its SHA-1 fingerprint (after being converted to hex) is:
 
 Obviously, it also generates the same signature for that string.
 
-## Explanation
+## Write-up
 
+NIST describes DSA (DSS) in [FIPS 186-4](https://csrc.nist.gov/publications/detail/fips/186/4/final). Long story short, DSA consists of two basic parts (functions): *sign* and *verify (and validation)*.
 
+DSA Signature Generation:
+
+```math
+\begin{aligned}
+1.\;&\begin{aligned}
+\textrm{A new secret random number $k$, sucht that $k\in \left \langle 1,q-1 \right \rangle$, $\textbf{shall}$ be generated prior to the generation of each digital signature for use during}
+\end{aligned}\\
+&\begin{aligned}
+\textrm{the signature generation process. This secret number $\textbf{shall}$ be protected from unauthorized disclosure and modification.}
+\end{aligned}\\
+2.\;&\begin{aligned}
+\textrm{Let $N$ be the bit length of $q$. Let $\textbf{min}(N, outlen)$ denote the minimum of the positive integers $N$ and $outlen$, where $outlen$ is the bit length}\
+\end{aligned}\\
+&\begin{aligned}
+\textrm{of the hash function output block.}
+\end{aligned}\\
+3.\;&\begin{aligned}
+\textrm{The signature of a message $M$ consists of the pair of numbers $r$ and $s$ that is computed according to the following equations:}
+\end{aligned}\\
+&\begin{aligned}
+r=(g^{k}\bmod p)\bmod q
+\end{aligned}\\
+&\begin{aligned}
+\textrm{$z=$ the left most $\textbf{min}(N,outlen)$ bits of $\textbf{Hash}(M^{'})$.}
+\end{aligned}\\
+&\begin{aligned}
+s=k^{-1}(z+x\cdot r)\bmod q
+\end{aligned}\\
+4.\;&\begin{aligned}
+\textrm{The signature (r, s) may be transmitted along with the message to the verifier.}
+\end{aligned}
+\end{aligned}
+```
+
+DSA Signature Verification and Validation:
+
+```math
+\begin{aligned}
+1.\;&\begin{aligned}
+\textrm{The verifier $\textbf{shall}$ check that $ 0 < r^{'} < q $ and $0 < s^{'} < q $; if either condition is violated, the signature $\textbf{shall}$ be rejected as invalid.}
+\end{aligned}\\
+2.\;&\begin{aligned}
+\textrm{If the two conditions in step 1 are satisfied, the verifier computes the following:}
+r=(g^{k}\bmod p)\bmod q
+\end{aligned}\\
+&\begin{aligned}
+w=(s^{'})^{-1}\bmod q
+\end{aligned}\\
+&\begin{aligned}
+\textrm{$z=$ the left most $\textbf{min}(N,outlen)$ bits of $\textbf{Hash}(M^{'})$.}
+\end{aligned}\\
+&\begin{aligned}
+u_{1}=z\cdot w\bmod q
+\end{aligned}\\
+&\begin{aligned}
+u_{2}=r^{'}\cdot w\bmod q
+\end{aligned}\\
+&\begin{aligned}
+v=(g^{u_{1}}\cdot y^{u_{2}}\bmod p)\bmod q
+\end{aligned}\\
+3.\;&\begin{aligned}
+\textrm{If $v=r^{'}$, then the signature is verified.}
+\end{aligned}\\
+4.\;&\begin{aligned}
+\textrm{If $v$ does not equal $r^{'}$, then the message or the signature may have been modified, there may have been an error in the signatory’s generation process,}
+\end{aligned}\\
+&\begin{aligned}
+\textrm{or an imposter (who did not know the private key associated with the public key of the claimed signatory) may have attempted to forge the signature.}
+\end{aligned}\\
+&\begin{aligned}
+\textrm{The signature $\textbf{shall}$ be considered invalid. No inference can be made as to whether the data is valid, only that when using the public key to verify}
+\end{aligned}\\
+&\begin{aligned}
+\textrm{the signature, the signature is incorrect for that data.}
+\end{aligned}
+\end{aligned}
+```
+
+According to the challenge, the private key $x$ should be computed by brute-forcing the small key $k$ used for signing. Since $r$ and $s$ are leaked, we can reconstruct the equation for so that we have the private key $x$ on the left side:
+
+```math
+s\equiv k^{-1}(z+x\cdot r)\bmod q\Rightarrow x\equiv (s\cdot k-z)\cdot r^{-1}\bmod q
+```
+
+Since we only know $r$, $s$, $z$ and $q$, with only $k$ being unknown (not counting $x$, since that's what we want to find out), we have to brute-force $k$, until we get a valid $x$, which we use to sign the message $M$ and then compare the $r^{'}$, $s^{'}$ with $r$, $s$. If they're equal, we found the correct private key $x$.
