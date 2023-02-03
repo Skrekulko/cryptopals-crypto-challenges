@@ -56,4 +56,4 @@ v &\stackrel{?}{\equiv}r\rightarrow 1\stackrel{?}{\equiv}1
 \end{align*}
 ```
 
-And once again, the system has been broken. Now in both circumstances you can verify any message with any signature.
+And once again, the system has been broken. Now in both circumstances you can verify any message with any signature. For anyone interested in more on this topic, I highly recommend to read this [paper](https://iacr.org/cryptodb/data/paper.php?pubkey=3528) by Vaudenay.
