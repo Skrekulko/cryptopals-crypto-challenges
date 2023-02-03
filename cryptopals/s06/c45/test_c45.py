@@ -38,3 +38,6 @@ def test_c45() -> None:
 
     # Verify The Signatures With Their Corresponding Messages
     assert dsa.verify(message=message1, r=r1, s=s1) and dsa.verify(message=message1, r=r2, s=s2)
+
+    # Verify The Signatures With Different Messages
+    assert dsa.verify(message=message2, r=r1, s=s1) and dsa.verify(message=message2, r=r2, s=s2)
