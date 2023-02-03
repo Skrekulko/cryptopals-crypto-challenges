@@ -78,11 +78,14 @@ class RSA:
         )
 
 class DSA:
-    def __init__(self, bits=2048):
+    def __init__(self, bits=2048, bypass=False):
         # Generate DSA Parameters
         self.parameters = CryptoDSA.generate(bits=bits)
 
-    def sign(self, message: bytes, x=None, k=None) -> [int, int]:
+        # Bypass Security Measures
+        self.bypass = bypass
+
+    def sign(self, message: bytes, x = None, k = None) -> [int, int]:
         # Private Key 'x'
         if x is not None:
             self.parameters.x = x
@@ -110,8 +113,9 @@ class DSA:
 
     def verify(self, message: bytes, r: int, s: int) -> bool:
         # Check Boundaries
-        if not (0 < r < self.parameters.q and 0 < s < self.parameters.q):
-            return False
+        if not self.bypass:
+            if not (0 < r < self.parameters.q and 0 < s < self.parameters.q):
+                return False
 
         ## Modular Inverse 's^-1' Of The Second Component 's'
         w = Math.mod_inv(s, self.parameters.q) % self.parameters.q
@@ -126,9 +130,9 @@ class DSA:
         u2 = r * w % self.parameters.q
 
         v = (
-                    Math.mod_pow(self.parameters.g, u1, self.parameters.p) *
-                    Math.mod_pow(self.parameters.y, u2, self.parameters.p)
-            ) % self.parameters.p % self.parameters.q
+            Math.mod_pow(self.parameters.g, u1, self.parameters.p) *
+            Math.mod_pow(self.parameters.y, u2, self.parameters.p)
+        ) % self.parameters.p % self.parameters.q
 
         if v == r:
             return True
