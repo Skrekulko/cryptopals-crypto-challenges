@@ -42,6 +42,7 @@ As you can see, by substituting $0$ for $g$, the whole signing and verification 
 
 ```math
 \begin{align*}
+\textrm{Public key:} &\\
 y &\equiv g^{x}\equiv (p+1)^{x}\equiv 1\bmod p\\
 \textrm{Signature:} &\\
 r &\equiv g^{k}\equiv (p+1)^{k}\equiv 1\bmod p\\
