@@ -1,4 +1,5 @@
 import codecs
+import sys
 from math import ceil
 from os import urandom
 from random import randint, getrandbits
@@ -29,6 +30,10 @@ class Converter:
     def int_to_hex(integer: int) -> bytes:
         integer_len = (max(integer.bit_length(), 1) + 7) // 8
         return integer.to_bytes(integer_len, "big")
+
+    @staticmethod
+    def hex_to_int(hexadecimal: bytes, byteorder=None) -> int:
+        return int.from_bytes(bytes=hexadecimal, byteorder=(sys.byteorder if byteorder is None else byteorder))
 
 
 class Blocks:
