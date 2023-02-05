@@ -40,4 +40,28 @@ Decrypt the string (after encrypting it to a hidden private key) above.
 
 ## Write-up
 
+This is a pretty good example of a side-channel attack. The oracle is giving us a partial information about the plaintext message. This partial information is the *parity* of the plaintext message, which might seem to be innocuous, but it can be fully exploited to recover the whole ciphertext message.
 
+It is known, that the plaintext message $m$ can end up with a $1$ or $0$ bit. Now, think about multiplying $m$ by 2, modulo $n$. If
+
+```math
+m\in \left \langle 0,\frac{n}{2} \right \rangle \cup \left \{ n \right \}\Rightarrow 2\cdot m \equiv 2\cdot m\bmod n
+```
+
+then, which is even. If instead
+
+```math
+m\in \left ( \frac{n}{2}, n-1 \right )\Rightarrow 2\cdot m\equiv 2\cdot m-n\bmod n
+```
+
+which is odd given that $n$ is always odd, since its a product of two very large primes. Thus, if we multiply the ciphertext $c$ by the encryption of $2$, and we call the parity oracle on the obtained ciphertext, we discover whether the plaintext message is in the even or the odd interval. Quick proof that we can multiply the ciphertext by the encryption of $2$:
+
+```math
+(2^{e}\cdot c)^{d}\equiv (2^{e}\cdot m^{e})^{d}\equiv 2^{e\cdot d}\cdot m^{e\cdot d}\equiv 2\cdot m\bmod n
+```
+
+This argument is easily generalized to $2^{i}\cdot m\bmod n$ for the i-th step. This is sufficient to execute a *binary search*: at each step, we divide the interval of potential plaintexts in two and then descend into the correct one based on the parity revealed by the oracle. For arbitrary precision floats, we can utilize *Decimal* in Python, which makes it simple to divide intervals in half without approximation mistakes. The total amount off iterations needed is:
+
+```math
+\left \lceil \log_{2}{n} \right \rceil - 1
+```
