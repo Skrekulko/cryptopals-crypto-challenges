@@ -7,11 +7,11 @@ from cryptopals.asymmetric import RSA
 
 
 def test_c40() -> None:
-    # Key Length In Bits
-    key_length = 1024
+    # Key Size In Bits
+    key_size = 1024
     
-    # Plaintext
-    plaintext = b"Hello!"
+    # Message
+    message = int.from_bytes(b"Hello!", "big")
     
     # Public Exponents 'e'
     e = 3
@@ -21,12 +21,12 @@ def test_c40() -> None:
     rsa_n = []
     for _ in range(e):
         # RSA
-        rsa = RSA(key_length, e)
+        rsa = RSA(bits=key_size, e=e)
         
         # Append Ciphertext
-        rsa_ciphertexts.append(rsa.encrypt(plaintext))
+        rsa_ciphertexts.append(rsa.encrypt(message=message))
         
         # Append Public Modulus 'n'
-        rsa_n.append(rsa.n)
+        rsa_n.append(rsa.parameters.n)
 
-    assert rsa_broadcast_attack(rsa_ciphertexts, rsa_n, e) == plaintext
+    assert rsa_broadcast_attack(rsa_ciphertexts, rsa_n, e) == message

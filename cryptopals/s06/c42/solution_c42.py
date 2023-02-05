@@ -3,7 +3,6 @@
 #
 
 import re
-from cryptopals.oracle import Oracle
 from cryptopals.asymmetric import RSA
 from cryptopals.hash import SHA1
 from cryptopals.utils import Converter
@@ -31,41 +30,29 @@ class Math:
                 step = 1
 
 
-class MyOracle(Oracle):
-    def __init__(self) -> None:
-        # Key Size Bits
-        self.key_length = 1024
-
-        # Public Exponent 'e'
-        self.e = 3
-
-        # RSA
-        self.rsa = RSA(bits=self.key_length, e=self.e)
+class Oracle(RSA):
+    def __init__(self, bits=2048, e=65537) -> None:
+        # Initialize RSA
+        super().__init__(bits=bits, e=e)
 
         # Hashes Of Ciphertexts (Empty)
         self.hashes = []
 
         # Default Plaintext
-        self.plaintext = b"armoring"
+        self.plaintext = Converter.hex_to_int(hexadecimal=b"armoring", byteorder="big")
 
         # Default Ciphertext
-        self.ciphertext = self.rsa.encrypt(plaintext=self.plaintext)
+        self.ciphertext = self.encrypt(message=self.plaintext)
 
         # Default Hash Of The Ciphertext (For Testing Purposes)
-        self.hashes.append(SHA1.digest(m=self.ciphertext))
+        self.hashes.append(SHA1.digest(m=Converter.int_to_hex(integer=self.ciphertext)))
 
-    def encrypt(self, plaintext=b"") -> bytes:
-        return self.rsa.encrypt(plaintext=plaintext)
-
-    def decrypt(self, ciphertext=b"", key=b"", iv=b"") -> bytes:
-        return self.rsa.decrypt(ciphertext=ciphertext)
-
-    def emsa_pkcs1_v1_5_encoding(self, data: bytes) -> bytes:
+    def emsa_pkcs1_v1_5_encoding(self, message: int) -> int:
         # Private Key Size (octets)
-        emLen = self.key_length // 8
+        emLen = self.parameters.size_in_bits() // 8
 
         # Data Digest
-        H = SHA1.digest(m=data)
+        H = SHA1.digest(m=Converter.int_to_hex(integer=message))
 
         # Algorithm Identifier
         AI = b"\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14"
@@ -88,19 +75,24 @@ class MyOracle(Oracle):
 
         return EM
 
-    def sign(self, data: bytes) -> bytes:
+    def sign(self, message: int) -> int:
         # Encoded Message
-        EM = self.emsa_pkcs1_v1_5_encoding(data=data)
+        EM = self.emsa_pkcs1_v1_5_encoding(message=message)
 
         # Sign The Message
-        signature = self.decrypt(ciphertext=EM)
+        return super().sign(message=EM)
 
-        return signature
-
-    def verify(self, signature: bytes, data: bytes) -> bool:
+    def verify(self, signature: bytes, message: bytes) -> bool:
         # Encrypt The Signature To Get The Original Encoded Message
         # And Prepend '\x00' Byte (Since It Was Lost Due To Being A Null)
-        EM1 = b"\x00" + self.encrypt(plaintext=signature)
+        EM1 = b"\x00" + Converter.int_to_hex(
+            integer=self.encrypt(
+                message=Converter.hex_to_int(
+                    hexadecimal=signature,
+                    byteorder="big"
+                )
+            )
+        )
 
         # Verify The Signature (Block In PKCS1.5 Standard Format)
         r = re.compile(b"\x00\x01\xff+?\x00.{15}(.{20})", re.DOTALL)
@@ -116,24 +108,31 @@ class MyOracle(Oracle):
         data_hash = m.group(1)
 
         # Compare
-        return data_hash == SHA1.digest(m=data)
+        return data_hash == SHA1.digest(m=message)
 
 
-def bleichenbacher_signature(n_size: int, e: int, data: bytes) -> bytes:
+def bleichenbacher_signature(n_size: int, e: int, message: bytes) -> bytes:
     # Composite n Size Condition
     if n_size < 369:
         raise Exception("Composite n must be at least 369 bits large.")
 
     # Pre-Forged Signature
-    preforged_signature = int.from_bytes(
-        b"\x00\x01" + Converter.int_to_hex(
-            (
+    preforged_signature = Converter.hex_to_int(
+        hexadecimal=(
+            b"\x00\x01" + Converter.int_to_hex(
+            integer=(
                 pow(2, 192) -
                 pow(2, 128) +
-                int.from_bytes(b"\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14", "big")
-            ) * pow(2, n_size - 208) +
-            int.from_bytes(SHA1.digest(m=data), "big") * pow(2, n_size - 368)
-        ), "big"
+                Converter.hex_to_int(
+                    hexadecimal=b"\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14",
+                    byteorder="big"
+                )) * pow(2, n_size - 208) +
+                Converter.hex_to_int(
+                    hexadecimal=SHA1.digest(m=message),
+                    byteorder="big"
+                ) * pow(2, n_size - 368)
+             )
+        ), byteorder="big"
     )
 
     # Forged Signature (e-th Root of Pre-Forged Signature)

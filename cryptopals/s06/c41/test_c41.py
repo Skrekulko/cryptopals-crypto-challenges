@@ -2,22 +2,22 @@
 #   41 - Implement unpadded message recovery oracle
 #
 
-from cryptopals.s06.c41.solution_c41 import MyOracle
-from cryptopals.utils import Converter, Generator, Math
+from cryptopals.s06.c41.solution_c41 import Oracle
+from cryptopals.utils import Generator, Math
 
 
 def test_c41() -> None:
     # Oracle
-    oracle = MyOracle()
+    oracle = Oracle()
 
     # Public Exponent 'e'
-    e = oracle.rsa.e
+    e = oracle.parameters.e
 
     # Public Modulus 'n'
-    n = oracle.rsa.n
+    n = oracle.parameters.n
 
-    # Captured Ciphertext (Integer)
-    ciphertext = int.from_bytes(oracle.ciphertext, "big")
+    # Captured Ciphertext
+    ciphertext = oracle.ciphertext
 
     # Random Number
     while True:
@@ -28,18 +28,12 @@ def test_c41() -> None:
             break
 
     # Crafted Ciphertext (Bytes)
-    crafted_ciphertext = Converter.int_to_hex(
-        (Math.mod_pow(s, e, n) * ciphertext) % n
-    )
+    crafted_ciphertext = (Math.mod_pow(s, e, n) * ciphertext) % n
 
     # Submit The Crafted Ciphertext And Get The Crafted Plaintext
-    crafted_plaintext = int.from_bytes(
-        oracle.decrypt(ciphertext=crafted_ciphertext), "big"
-    )
+    crafted_plaintext = oracle.decrypt(message=crafted_ciphertext)
 
     # Calculate The Original Plaintext
-    plaintext = Converter.int_to_hex(
-        (crafted_plaintext * Math.mod_inv(a=s, m=n)) % n
-    )
+    plaintext = crafted_plaintext * Math.mod_inv(a=s, m=n) % n
 
     assert plaintext == oracle.plaintext

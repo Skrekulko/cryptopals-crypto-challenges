@@ -2,7 +2,6 @@ from Crypto.PublicKey import RSA as CryptoRSA
 from Crypto.PublicKey import DSA as CryptoDSA
 from Crypto.Random.random import randint
 from cryptopals.utils import Math, Generator
-from cryptopals.utils import Converter
 from cryptopals.hash import SHA1
 
 
@@ -55,27 +54,30 @@ class DiffieHellman:
 
 
 class RSA:
-    def __init__(self, bits: int, e=65537):
+    def __init__(self, bits=2048, e=65537) -> None:
         # Generate RSA Parameters
         self.parameters = CryptoRSA.generate(bits=bits, e=e)
 
-    def encrypt(self, plaintext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(plaintext, "big"),
-                self.parameters.e,
-                self.parameters.n
-            )
+    def encrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.e,
+            self.parameters.n
         )
 
-    def decrypt(self, ciphertext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(ciphertext, "big"),
-                self.parameters.d,
-                self.parameters.n
-            )
+    def decrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.d,
+            self.parameters.n
         )
+
+    def sign(self, message: int) -> int:
+        return self.decrypt(message=message)
+
+    def verify(self, message: int, signature: int) -> bool:
+        return self.encrypt(message=signature) == message
+
 
 class DSA:
     def __init__(self, bits=2048, bypass=False):

@@ -2,11 +2,11 @@
 #   39 - Implement RSA
 #
 
-from Crypto.Util.number import getPrime
-from cryptopals.utils import Converter
+from Crypto.PublicKey import RSA as CryptoRSA
+from cryptopals.utils import Math
 
 
-class Math:
+class MyMath(Math):
     @staticmethod
     # Greatest Common Divider
     def gcd(a: int, b: int) -> int:
@@ -43,37 +43,26 @@ class Math:
 
 
 class RSA:
-    def __init__(self, key_len: int, e=3):
-        # Public Exponent 'e'
-        self.e = e
+    def __init__(self, bits=2048, e=65537) -> None:
+        # Generate RSA Parameters
+        self.parameters = CryptoRSA.generate(bits=bits, e=e)
         
-        phi = 0
-        while Math.gcd(self.e, phi) != 1:
-            # Secret Primes 'p' And 'q' (q < p)
-            p, q = getPrime(key_len // 2), getPrime(key_len // 2)
-            
-            phi = Math.lcm(p - 1, q - 1)
-            
-            # Public Modulus 'n'
-            self.n = p * q
-        
-        # Secret Exponent 'd'
-        self._d = Math.mod_inv(self.e, phi)
-        
-    def encrypt(self, plaintext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(plaintext, "big"),
-                self.e,
-                self.n
-            )
+    def encrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.e,
+            self.parameters.n
         )
         
-    def decrypt(self, ciphertext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(ciphertext, "big"),
-                self._d,
-                self.n
-            )
+    def decrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.d,
+            self.parameters.n
         )
+
+    def sign(self, message: int) -> int:
+        return self.decrypt(message=message)
+
+    def verify(self, message: int, signature: int) -> bool:
+        return self.encrypt(message=signature) == message

@@ -2,35 +2,32 @@
 #   41 - Implement unpadded message recovery oracle
 #
 
-from cryptopals.oracle import Oracle
 from cryptopals.asymmetric import RSA
 from cryptopals.hash import SHA1
+from cryptopals.utils import Converter
 
 
-class MyOracle(Oracle):
-    def __init__(self) -> None:
-        # Key Length In Bits
-        self.key_length = 1024
-
-        # RSA
-        self.rsa = RSA(key_len=self.key_length)
+class Oracle(RSA):
+    def __init__(self, bits=2048, e=65537) -> None:
+        # Initialize RSA
+        super().__init__(bits=bits, e=e)
 
         # Hashes Of Ciphertexts (Empty)
         self.hashes = []
 
         # Default Plaintext
-        self.plaintext = b"armoring"
+        self.plaintext = int.from_bytes(b"armoring", "big")
 
         # Default Ciphertext
-        self.ciphertext = self.rsa.encrypt(plaintext=self.plaintext)
+        self.ciphertext = self.encrypt(message=self.plaintext)
 
         # Default Hash Of The Ciphertext (For Testing Purposes)
-        self.hashes.append(SHA1.digest(m=self.ciphertext))
+        self.hashes.append(SHA1.digest(m=Converter.int_to_hex(self.ciphertext)))
 
-    def encrypt(self, plaintext=b"") -> bytes:
-        ciphertext = self.rsa.encrypt(plaintext=plaintext)
+    def encrypt(self, message: int) -> int:
+        ciphertext = super().encrypt(message=message)
 
-        digest = SHA1.digest(ciphertext)
+        digest = SHA1.digest(m=Converter.int_to_hex(ciphertext))
 
         if digest in self.hashes:
             raise Exception("Duplicate hash found!")
@@ -39,10 +36,10 @@ class MyOracle(Oracle):
 
         return ciphertext
 
-    def decrypt(self, ciphertext=b"", key=b"", iv=b"") -> bytes:
-        digest = SHA1.digest(m=ciphertext)
+    def decrypt(self, message: int) -> int:
+        digest = SHA1.digest(m=Converter.int_to_hex(message))
 
         if digest in self.hashes:
             raise Exception("Duplicate hash found!")
 
-        return self.rsa.decrypt(ciphertext=ciphertext)
+        return super().decrypt(message=message)
