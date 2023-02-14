@@ -25,6 +25,6 @@ The full Bleichenbacher attack works basically like this:
 
 What happens when we get down to one interval is, we stop blindly incrementing 's'; instead, we start rapidly growing 'r' and backing it out to 's' values by solving m1=m0s1-rn for 's' instead of 'r' or 'm0'. So much algebra! Make your teenage son do it for you! *Note: does not work well in practice*
 
-## Write-up
+## Note
 
-
+This challenge was already solved in the previous one, by implementing the full version of the Bleichenbacher's attack, so no write-up is needed here.
