@@ -23,7 +23,7 @@ class Generator:
 
 
 class MyOracle(Oracle):
-    def encrypt(self, plaintext=b"") -> [str, bytes]:
+    def encrypt(self, plaintext=b"") -> tuple[str, bytes]:
         key = Generator.key_128b()
         iv = Generator.key_128b()
         header_bytes = Generator.random_bytes(5, 10)
@@ -34,3 +34,6 @@ class MyOracle(Oracle):
             return "ecb", AES128ECB.encrypt(padded_plaintext, key)
         else:
             return "cbc", AES128CBC.encrypt(padded_plaintext, key, iv)
+
+    def decrypt(self, ciphertext=b"", key=b"", iv=b"") -> bytes:
+        pass

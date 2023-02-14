@@ -3,11 +3,19 @@
 #
 
 from Crypto.Cipher import AES
-from cryptopals.utils import Blocks
-from cryptopals.converter import Converter
+from cryptopals.utils import Blocks, Converter
 
 
 class PKCS7:
+    @staticmethod
+    def padding(data: bytes, block_size: int) -> bytes:
+        padding_length = block_size - (len(data) % block_size)
+
+        if padding_length == block_size:
+            return data
+
+        return data + padding_length * Converter.int_to_hex(padding_length)
+
     @staticmethod
     def strip(padded_data: bytes, block_size: int) -> bytes:
         last_byte = padded_data[-1]

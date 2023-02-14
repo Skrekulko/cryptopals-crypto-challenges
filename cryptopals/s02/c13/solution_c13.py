@@ -28,8 +28,8 @@ class MyOracle(Oracle):
     def encrypt(self, plaintext=b""):
         return AES128ECB.encrypt(self.profile_for(plaintext), self.key)
 
-    def decrypt(self, encrypted_profile):
-        return AES128ECB.decrypt(encrypted_profile, self.key)
+    def decrypt(self, ciphertext=b"", key=b"", iv=b""):
+        return AES128ECB.decrypt(ciphertext, self.key)
 
 
 class MyDetector(Detector):

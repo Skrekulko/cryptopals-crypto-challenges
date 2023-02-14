@@ -25,9 +25,6 @@ def test_c38() -> None:
     # Server's Session Key Address
     server_address = "http://127.0.0.1:8082/session_key"
     
-    # Large Safe Prime
-    N = load_agreed_value()
-    
     # Client's Session Key 'K'
     K_C = client_c38()
     

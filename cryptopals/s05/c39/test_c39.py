@@ -12,10 +12,14 @@ def test_c39() -> None:
     # Public Exponent 'e'
     e = 3
     
-    # Plaintext
-    plaintext = b"Hello!"
+    # Message
+    message = int.from_bytes(b"Hello!", "big")
     
     # RSA
-    rsa = RSA(key_size, e)
+    rsa = RSA(bits=key_size, e=e)
 
-    assert rsa.decrypt(RSA(key_size, e).encrypt(plaintext)) == plaintext
+    # Encrypted Message
+    encrypted = rsa.encrypt(message=message)
+
+    # Decrypt The Message And Compare With Plaintext
+    assert rsa.decrypt(message=encrypted) == message

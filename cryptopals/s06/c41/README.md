@@ -1,4 +1,4 @@
-### Implement unpadded message recovery oracle
+## Implement unpadded message recovery oracle
 
 Nate Lawson says we should stop calling it "RSA padding" and start calling it "RSA armoring". Here's why.
 
@@ -39,3 +39,45 @@ Implement that attack.
 #### Careful about division in cyclic groups.
 
 > Remember: you don't simply divide mod N; you multiply by the multiplicative inverse mod N. So you'll need a modinv() function.
+
+## Write-up
+
+As we know, the RSA ciphertext $c$ and message $m$ have this form:
+
+```math
+\begin{matrix}
+c\equiv m^e\bmod n
+\\
+m\equiv c^{d}\bmod n
+\end{matrix}
+```
+
+Here's a quick proof that the message's form is correct:
+
+```math
+\begin{matrix}
+m\equiv c^{d}\equiv (m^{e})^{d}\equiv m^{ed}\equiv m\bmod n
+\\
+(d\equiv e^{-1}\bmod n\Rightarrow ed\equiv 1 \bmod n)
+\end{matrix}
+```
+
+We now construct our new ciphertext $c^{'}$ with a random number $s$ such that $s>1\bmod n$:
+
+```math
+c^{'}\equiv s^{e}c\bmod n
+```
+
+After submitting our new ciphertext $c^{'}$ to the server, we get the new plaintext $m^{'}$:
+
+```math
+m^{'}\equiv (c^{'})^{d}\equiv (s^{e}c)^{d}\equiv (s^{e}m^{e})^{d}\equiv sm\bmod n
+```
+
+You may now notice, that there's the original plaintext $m$ on the right side of the equation. To isolate it, we need to multiply both sides with the multiplicative inverse $s^{-1}$ of $s$:
+
+```math
+ms^{-1}\equiv sms^{-1}\equiv m\bmod n\Rightarrow \underline{ms^{-1}\equiv m\bmod n}
+```
+
+As you can see, we successfully recovered the original plaintext $m$.

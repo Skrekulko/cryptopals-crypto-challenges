@@ -2,11 +2,11 @@
 #   39 - Implement RSA
 #
 
-from Crypto.Util.number import getPrime
-from cryptopals.converter import Converter
+from Crypto.PublicKey import RSA as CryptoRSA
+from cryptopals.utils import Math
 
 
-class Math:
+class MyMath(Math):
     @staticmethod
     # Greatest Common Divider
     def gcd(a: int, b: int) -> int:
@@ -18,57 +18,51 @@ class Math:
         return abs(a * b) // Math.gcd(a, b) if a and b else 0
 
     @staticmethod
+    # Extended GCD
+    def extended_gcd(aa: int, bb: int) -> [int]:
+        lastremainder, remainder = abs(aa), abs(bb)
+
+        x, lastx, y, lasty = 0, 1, 1, 0
+
+        while remainder:
+            lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
+            x, lastx = lastx - quotient * x, x
+            y, lasty = lasty - quotient * y, y
+
+        return lastremainder, lastx * (-1 if aa < 0 else 1), lasty * (-1 if bb < 0 else 1)
+
+    @staticmethod
     # Modular Inverse
-    def mod_inv(a: int, n: int) -> int:
-        t, r = 0, n
-        new_t, new_r = 1, a
+    def mod_inv(a: int, m: int) -> int:
+        g, x, y = Math.extended_gcd(a, m)
 
-        while new_r != 0:
-            quotient = r // new_r
-            t, new_t = new_t, t - quotient * new_t
-            r, new_r = new_r, r - quotient * new_r
+        if g != 1:
+            raise ValueError
 
-        if r > 1:
-            raise Exception("'a' does not have a modular inverse!")
-
-        if t < 0:
-            t = t + n
-
-        return t
+        return x % m
 
 
 class RSA:
-    def __init__(self, key_len: int, e=3):
-        # Public Exponent 'e'
-        self.e = e
+    def __init__(self, bits=2048, e=65537) -> None:
+        # Generate RSA Parameters
+        self.parameters = CryptoRSA.generate(bits=bits, e=e)
         
-        phi = 0
-        while Math.gcd(self.e, phi) != 1:
-            # Secret Primes 'p' And 'q' (q < p)
-            p, q = getPrime(key_len // 2), getPrime(key_len // 2)
-            
-            phi = Math.lcm(p - 1, q - 1)
-            
-            # Public Modulus 'n'
-            self.n = p * q
-        
-        # Secret Exponent 'd'
-        self._d = Math.mod_inv(self.e, phi)
-        
-    def encrypt(self, plaintext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(plaintext, "big"),
-                self.e,
-                self.n
-            )
+    def encrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.e,
+            self.parameters.n
         )
         
-    def decrypt(self, ciphertext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(ciphertext, "big"),
-                self._d,
-                self.n
-            )
+    def decrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.d,
+            self.parameters.n
         )
+
+    def sign(self, message: int) -> int:
+        return self.decrypt(message=message)
+
+    def verify(self, message: int, signature: int) -> bool:
+        return self.encrypt(message=signature) == message

@@ -1,6 +1,8 @@
-from Crypto.Util.number import getPrime
+from Crypto.PublicKey import RSA as CryptoRSA
+from Crypto.PublicKey import DSA as CryptoDSA
+from Crypto.Random.random import randint
 from cryptopals.utils import Math, Generator
-from cryptopals.utils import Converter
+from cryptopals.hash import SHA1
 
 
 class DiffieHellman:
@@ -52,37 +54,89 @@ class DiffieHellman:
 
 
 class RSA:
-    def __init__(self, key_len: int, e=3):
-        # Public Exponent 'e'
-        self.e = e
+    def __init__(self, bits=2048, e=65537) -> None:
+        # Generate RSA Parameters
+        self.parameters = CryptoRSA.generate(bits=bits, e=e)
 
-        phi = 0
-        while Math.gcd(self.e, phi) != 1:
-            # Secret Primes 'p' And 'q' (q < p)
-            p, q = getPrime(key_len // 2), getPrime(key_len // 2)
-
-            phi = Math.lcm(p - 1, q - 1)
-
-            # Public Modulus 'n'
-            self.n = p * q
-
-        # Secret Exponent 'd'
-        self._d = Math.mod_inv(self.e, phi)
-
-    def encrypt(self, plaintext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(plaintext, "big"),
-                self.e,
-                self.n
-            )
+    def encrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.e,
+            self.parameters.n
         )
 
-    def decrypt(self, ciphertext: bytes) -> bytes:
-        return Converter.int_to_hex(
-            pow(
-                int.from_bytes(ciphertext, "big"),
-                self._d,
-                self.n
-            )
+    def decrypt(self, message: int) -> int:
+        return Math.mod_pow(
+            message,
+            self.parameters.d,
+            self.parameters.n
         )
+
+    def sign(self, message: int) -> int:
+        return self.decrypt(message=message)
+
+    def verify(self, message: int, signature: int) -> bool:
+        return self.encrypt(message=signature) == message
+
+
+class DSA:
+    def __init__(self, bits=2048, bypass=False):
+        # Generate DSA Parameters
+        self.parameters = CryptoDSA.generate(bits=bits)
+
+        # Bypass Security Measures
+        self.bypass = bypass
+
+    def sign(self, message: bytes, x = None, k = None) -> [int, int]:
+        # Private Key 'x'
+        if x is not None:
+            self.parameters.x = x
+
+        # Pre-Message Secret Number 'k'
+        if k is None:
+            k = randint(1, self.parameters.q - 1)
+
+        # First Component 'r'
+        r = Math.mod_pow(
+            b=self.parameters.g,
+            e=k,
+            m=self.parameters.p
+        ) % self.parameters.q
+
+        # The Leftmost min(N, outlen) Bits Of Hash(M)
+        digest = int.from_bytes(SHA1.digest(m=message), "big")
+        digest_len = digest.bit_length()
+        z = digest >> (digest_len - Math.gcd(self.parameters.q.bit_length(), digest_len))
+
+        # Second Component 's'
+        s = Math.mod_inv(a=k, m=self.parameters.q) * (z + self.parameters.x * r) % self.parameters.q
+
+        return r, s
+
+    def verify(self, message: bytes, r: int, s: int) -> bool:
+        # Check Boundaries
+        if not self.bypass:
+            if not (0 < r < self.parameters.q and 0 < s < self.parameters.q):
+                return False
+
+        ## Modular Inverse 's^-1' Of The Second Component 's'
+        w = Math.mod_inv(s, self.parameters.q) % self.parameters.q
+
+        # The Leftmost min(N, outlen) Bits Of Hash(M')
+        digest = int.from_bytes(SHA1.digest(m=message), "big")
+        digest_len = digest.bit_length()
+        z = digest >> (digest_len - Math.gcd(self.parameters.q.bit_length(), digest_len))
+
+        u1 = z * w % self.parameters.q
+
+        u2 = r * w % self.parameters.q
+
+        v = (
+            Math.mod_pow(self.parameters.g, u1, self.parameters.p) *
+            Math.mod_pow(self.parameters.y, u2, self.parameters.p)
+        ) % self.parameters.p % self.parameters.q
+
+        if v == r:
+            return True
+
+        return False

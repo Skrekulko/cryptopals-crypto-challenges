@@ -1,4 +1,5 @@
 import codecs
+import sys
 from math import ceil
 from os import urandom
 from random import randint, getrandbits
@@ -30,6 +31,10 @@ class Converter:
         integer_len = (max(integer.bit_length(), 1) + 7) // 8
         return integer.to_bytes(integer_len, "big")
 
+    @staticmethod
+    def hex_to_int(hexadecimal: bytes, byteorder=None) -> int:
+        return int.from_bytes(bytes=hexadecimal, byteorder=(sys.byteorder if byteorder is None else byteorder))
+
 
 class Blocks:
     @staticmethod
@@ -50,7 +55,7 @@ class Blocks:
 
 class Math:
     @staticmethod
-    # Modular Exponentiation 'a^b mod m'
+    # Modular Exponentiation 'b^e mod m'
     def mod_pow(b: int, e: int, m: int) -> int:
         x = 1
 
@@ -74,23 +79,45 @@ class Math:
         return abs(a * b) // Math.gcd(a, b) if a and b else 0
 
     @staticmethod
+    # Extended GCD
+    def extended_gcd(aa: int, bb: int) -> [int]:
+        lastremainder, remainder = abs(aa), abs(bb)
+
+        x, lastx, y, lasty = 0, 1, 1, 0
+
+        while remainder:
+            lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
+            x, lastx = lastx - quotient * x, x
+            y, lasty = lasty - quotient * y, y
+
+        return lastremainder, lastx * (-1 if aa < 0 else 1), lasty * (-1 if bb < 0 else 1)
+
+    @staticmethod
     # Modular Inverse
-    def mod_inv(a: int, n: int) -> int:
-        t, r = 0, n
-        new_t, new_r = 1, a
+    def mod_inv(a: int, m: int) -> int:
+        g, x, y = Math.extended_gcd(a, m)
 
-        while new_r != 0:
-            quotient = r // new_r
-            t, new_t = new_t, t - quotient * new_t
-            r, new_r = new_r, r - quotient * new_r
+        if g != 1:
+            raise ValueError
 
-        if r > 1:
-            raise Exception("'a' does not have a modular inverse!")
+        return x % m
 
-        if t < 0:
-            t = t + n
+    @staticmethod
+    # Integer Root 'Nth' Of 'X'
+    def root(a: int, b: int) -> int:
+        # Root Is Less Than 2 (Root Is 1)
+        if b < 2:
+            return b
 
-        return t
+        a1 = a - 1
+        c = 1
+        d = (a1 * c + b // (c ** a1)) // a
+        e = (a1 * d + b // (d ** a1)) // a
+
+        while c not in (d, e):
+            c, d, e = d, e, (a1 * e + b // (e ** a1)) // a
+
+        return min(d, e)
 
 
 class Generator:

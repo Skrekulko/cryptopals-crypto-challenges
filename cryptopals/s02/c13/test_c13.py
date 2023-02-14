@@ -4,6 +4,7 @@
 
 from cryptopals.s02.c13.solution_c13 import MyOracle, Decipher
 
+
 def test_c13() -> None:
     # Oracle
     oracle = MyOracle()

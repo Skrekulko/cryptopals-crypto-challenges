@@ -19,7 +19,7 @@ So go ahead and make that happen. You'll need to use this code for the rest of t
 
 ### Write-Up
 
-The *codecs* package for Python is used to encode/decode, and *rstrip* is used to get rid of any end characters.
+The *encode*[^1] and *decode*[^2] functions from the *codecs*[^3] package is used to encode/decode, and *rstrip*[^4] is used to get rid of any end characters.
 
 First, the hex string
 
@@ -39,9 +39,10 @@ which is then finally encoded into a Base64 string.
 SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t
 ```
 
+[^1]: [codecs](https://docs.python.org/3/library/codecs.html#codecs.encode)
 
-### References
+[^2]: [codecs](https://docs.python.org/3/library/codecs.html#codecs.decode)
 
-[1] [codecs](https://docs.python.org/3/library/codecs.html)
+[^3]: [codecs](https://docs.python.org/3/library/codecs.html)
 
-[2] [rstrip](https://docs.python.org/3/library/stdtypes.html)
+[^4]: [rstrip](https://docs.python.org/3/library/stdtypes.html#str.rstrip)
