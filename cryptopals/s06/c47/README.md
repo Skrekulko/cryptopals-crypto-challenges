@@ -45,3 +45,55 @@ Your Step 3 code is probably not going to need to handle multiple ranges.
 We recommend you just use the raw math from paper (check, check, double check your translation to code) and not spend too much time trying to grok how the math works.
 
 ## Write-up
+
+This attack is based on the [paper](https://link.springer.com/chapter/10.1007/BFb0055716) published by Bleichenbacher. It is a chosen ciphertext attack against protocols based on the RSA encryption standard PKCS #1, more specifically the RSAES-PKCS1-v1_5 encryption, which is specified in the [RFC 8017](https://www.rfc-editor.org/rfc/rfc8017.html).
+
+We're going to cite the math behind the attack, without really explaining on how to implement it... Just take a look on the code. (Implementing this gave a pretty good headache.) Okay, let's start.
+
+**Step 1: Blinding.** Given an integer $c$, choose different random integers $s_{0}$; then check, by accessing the oracle, whether $c(s_{0})^{e}\bmod n$ is PKCS conforming. For the first successful value $s_{0}$, set
+
+```math
+\begin{aligned}
+c_{0}&\leftarrow c(s_{0})^{e}\bmod n
+\\
+M_{0}&\leftarrow \{[2B,3B-1]\}
+\\
+i&\leftarrow 1
+\end{aligned}
+```
+
+Please take a note, that this step can bi skipped if $c$ is already PKCS conforming (i.e., when $c$ is an encrypted message). In that case, we set $s_{0}\leftarrow 1$. However, step 1 is always necessary for computing a signature, even if we do not wish to get a blind signature.
+
+**Step 2: Searching for PKCS conforming messages.**
+
+**Step 2.a: Starting the search.** If $i=1$, then search for the smallest positive integer $s_{1}\geq n/(3B)$, such that the ciphertext $c_{0}(s_{1})^{e}\bmod n$ is PKCS conforming.
+
+**Step 2.b: Searching with more than one interval left.** Otherwise, if $i>1$ and the number of intervals in $M_{i-1}$ is at least $2$, then search for the smallest integer $s_{i}>s_{i-1}$, such that the ciphertext $c_{0}(s_{i})^{e}\bmod n$ is PKCS conforming.
+
+**Step 2.c: Searching with one interval left.** Otherwise, if $M_{i-1}$ contains exactly one interval (i.e., $M_{i-1}=\\{[a,b]\\}$), then choose small integer values $r_{i}$, $s_{i}$ such that
+
+```math
+r_{i}\geq 2\frac{bs_{i-1}-2B}{n}
+```
+
+and
+
+```math
+\frac{2B+r_{i}n}{b}\leq s_{i}<\frac{3B+r_{i}n}{a}
+```
+
+until the ciphertext $c_{0}(s_{i})^{e}\bmod n$ is PKCS conforming.
+
+**Step 3: Narrowing the set of solutions.** After $s_{i}$ has beed found, the set $M_{i}$ is computed as
+
+```math
+\begin{matrix}
+M_{i}\leftarrow\bigcup\limits_{(a,b,r)}\left \{ \left [ \max\left ( a,\left \lceil \frac{2B+rn}{s_{i}} \right \rceil \right ),\min\left ( b,\left \lfloor \frac{3B-1+rn}{s_{i}} \right \rfloor \right ) \right ] \right \}
+\\
+\textrm{for all }[a,b]\in M_{i-1}\textrm{ and }\frac{as_{i}-3B+1}{n}\leq r\leq\frac{bs_{i}-2B}{n}.
+\end{matrix}
+```
+
+**Step 4: Computing the solution.** If $M_{i}$ contains only one interval of length $1$ (i.e., $M_{i}={[a,a]}$), then set $m\leftarrow a(s_{0})^{-1}\bmod n$, and return $m$ as solution of $m\equiv c^{d}\bmod n$. Otherwise, set $i\leftarrow i+1$ and go to step 2.
+
+And this is basically it. For quick results run it on a 256-bit RSA, otherwise you will need to wait *a bit*.
