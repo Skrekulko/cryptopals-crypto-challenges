@@ -97,3 +97,21 @@ M_{i}\leftarrow\bigcup\limits_{(a,b,r)}\left \{ \left [ \max\left ( a,\left \lce
 **Step 4: Computing the solution.** If $M_{i}$ contains only one interval of length $1$ (i.e., $M_{i}={[a,a]}$), then set $m\leftarrow a(s_{0})^{-1}\bmod n$, and return $m$ as solution of $m\equiv c^{d}\bmod n$. Otherwise, set $i\leftarrow i+1$ and go to step 2.
 
 And this is basically it. For quick results run it on a 256-bit RSA, otherwise you will need to wait *a bit*.
+
+## Notes
+
+Please keep in mind that the Crypto library I used does not allow the RSA to be less than 1024 bits, thus I edited out these lines in the following files to get around this.
+
+RSA.py:
+
+```python
+if bits < 1024:
+    raise ValueError("RSA modulus length must be >= 1024")
+```
+
+Primality.py:
+
+```python
+if exact_bits < 160:
+    raise ValueError("Prime number is not big enough.")
+```
