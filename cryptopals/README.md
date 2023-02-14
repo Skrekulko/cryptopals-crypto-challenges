@@ -11,12 +11,11 @@ The following is my walkthrough of these challenges using the Python 3.10, altho
 
 This is still a work in progress. Since I am not solving the challenges on a regular basis, the update schedule is erratic. In the table of contents, every solved challenge is indicated with a :heavy_check_mark:, while every unsolved challenge is marked with a :x:.
 
-### Release Schedule
+### Todo:
 
-- **January 2023** -> Set 6: RSA and DSA
-- **February 2023** -> Set 7: Hashes
-- **March 2023** -> Set 8: Abstract Algebra
-- **TBD** -> Write-Ups
+- Set 7: Hashes
+- Set 8: Abstract Algebra
+- Write-Ups
 
 ## Structure Of This Project
 
@@ -148,11 +147,11 @@ test_c01.py::test_c01 PASSED                                                    
 
 #### Timeout
 
-The timeout for every test is set to **60 seconds** by default, however it may be increased in the future if the solutions take longer to give the final result for the tests. This timeout can be configured in the *pyproject.toml* file as follows:
+The timeout for every test is set to **120 seconds** by default, however some solutions take longer to give the final result for the tests, so it is advised to increase this limit. This timeout can be configured in the *pyproject.toml* file as follows:
 
 ```
 [tool.pytest.ini_options]
-timeout = 60
+timeout = 120
 ```
 
 ## Table Of Contents
@@ -215,14 +214,14 @@ timeout = 60
     </ol>
     <li><b>Set 6: RSA and DSA</b></li>
     <ol type="1" start="41">
-        <li>Implement unpadded message recovery oracle :x:</li>
-        <li>Bleichenbacher's e=3 RSA Attack :x:</li>
-        <li>DSA key recovery from nonce :x:</li>
-        <li>DSA nonce recovery from repeated nonce :x:</li>
-        <li>DSA parameter tampering :x:</li>
-        <li>RSA parity oracle :x:</li>
-        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :x:</li>
-        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :x:</li>
+        <li>Implement unpadded message recovery oracle :heavy_check_mark:</li>
+        <li>Bleichenbacher's e=3 RSA Attack :heavy_check_mark:</li>
+        <li>DSA key recovery from nonce :heavy_check_mark:</li>
+        <li>DSA nonce recovery from repeated nonce :heavy_check_mark:</li>
+        <li>DSA parameter tampering :heavy_check_mark:</li>
+        <li>RSA parity oracle :heavy_check_mark:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case) :heavy_check_mark:</li>
+        <li>Bleichenbacher's PKCS 1.5 Padding Oracle (Complete Case) :heavy_check_mark:</li>
     </ol>
     <li><b>Set 7: Hashes</b></li>
     <ol type="1" start="49">
