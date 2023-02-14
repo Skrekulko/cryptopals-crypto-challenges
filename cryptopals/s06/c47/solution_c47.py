@@ -1,5 +1,3 @@
-#! /usr/bin/env python
-
 #
 #   47 - Bleichenbacher's PKCS 1.5 Padding Oracle (Simple Case)
 #
